@@ -23,16 +23,31 @@ public class PedidoReabastecimiento implements OperacionLogistica {
      * @param sucursal sucursal que realiza el pedido
      */
     public PedidoReabastecimiento(String id, Sucursal sucursal) {
-        // A implementar.
+        if (id == null || id.isBlank()) {
+            throw new IllegalArgumentException(
+                    "El identificador del pedido no puede ser nulo o vacío.");
+        }
+
+        if (sucursal == null) {
+            throw new IllegalArgumentException(
+                    "La sucursal no puede ser nula.");
+        }
+
+        this.id = id;
+        this.sucursal = sucursal;
+        this.lineas = new ListaSimple<>();
     }
 
     /**
      * Agrega una línea de productos al pedido.
      *
+     * La validación de elementos nulos es responsabilidad
+     * de la implementación de ListaSimple.
+     *
      * @param linea línea a agregar
      */
     public void agregarLinea(LineaPedido linea) {
-        // A implementar.
+        this.lineas.agregar(linea);
     }
 
     /**
@@ -42,7 +57,7 @@ public class PedidoReabastecimiento implements OperacionLogistica {
      */
     @Override
     public String getId() {
-        throw new UnsupportedOperationException();
+        return this.id;
     }
 
     /**
@@ -51,7 +66,7 @@ public class PedidoReabastecimiento implements OperacionLogistica {
      * @return sucursal solicitante
      */
     public Sucursal getSucursal() {
-        throw new UnsupportedOperationException();
+        return this.sucursal;
     }
 
     /**
@@ -60,7 +75,7 @@ public class PedidoReabastecimiento implements OperacionLogistica {
      * @return lista de líneas del pedido
      */
     public ListaSimple<LineaPedido> getLineas() {
-        throw new UnsupportedOperationException();
+        return this.lineas;
     }
 
     /**
@@ -72,16 +87,35 @@ public class PedidoReabastecimiento implements OperacionLogistica {
      * @return prioridad del pedido
      */
     public int getPrioridad() {
-        throw new UnsupportedOperationException();
+        return this.sucursal.getCantidadClientes();
     }
 
     /**
      * Obtiene el tipo de operación logística.
      *
+     * Un pedido de reabastecimiento corresponde a una carga,
+     * ya que los productos son cargados para ser enviados
+     * a una sucursal.
+     *
      * @return tipo de operación
      */
     @Override
     public TipoOperacion getTipoOperacion() {
-        throw new UnsupportedOperationException();
+        return TipoOperacion.CARGA;
+    }
+
+    /**
+     * Devuelve una representación textual del pedido.
+     *
+     * @return información del pedido
+     */
+    @Override
+    public String toString() {
+        return "PedidoReabastecimiento{" +
+                "id='" + this.id + '\'' +
+                ", sucursal=" + this.sucursal +
+                ", prioridad=" + getPrioridad() +
+                ", cantidadLineas=" + this.lineas.tamaño() +
+                '}';
     }
 }

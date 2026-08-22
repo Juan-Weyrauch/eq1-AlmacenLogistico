@@ -18,7 +18,18 @@ public class LineaEntrega {
      * @param cantidad cantidad entregada
      */
     public LineaEntrega(Producto producto, int cantidad) {
-        // A implementar.
+        if (producto == null) {
+            throw new IllegalArgumentException(
+                    "El producto de la línea de entrega no puede ser nulo.");
+        }
+
+        if (cantidad <= 0) {
+            throw new IllegalArgumentException(
+                    "La cantidad entregada debe ser mayor que cero.");
+        }
+
+        this.producto = producto;
+        this.cantidad = cantidad;
     }
 
     /**
@@ -27,7 +38,7 @@ public class LineaEntrega {
      * @return producto entregado
      */
     public Producto getProducto() {
-        throw new UnsupportedOperationException();
+        return this.producto;
     }
 
     /**
@@ -36,6 +47,19 @@ public class LineaEntrega {
      * @return cantidad entregada
      */
     public int getCantidad() {
-        throw new UnsupportedOperationException();
+        return this.cantidad;
+    }
+
+    /**
+     * Devuelve una representación textual de la línea de entrega.
+     *
+     * @return información de la línea
+     */
+    @Override
+    public String toString() {
+        return "LineaEntrega{" +
+                "producto=" + this.producto +
+                ", cantidad=" + this.cantidad +
+                '}';
     }
 }
