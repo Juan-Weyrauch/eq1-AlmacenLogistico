@@ -17,6 +17,17 @@ public class Conjunto<T> extends ListaSimple<T> implements TDAConjunto<T> {
 
     @Override
     public void agregar(int index, T elem) {
+
+        // El índice debe validarse siempre,
+        // incluso si el elemento ya pertenece al conjunto.
+        if (index < 0 || index > this.tamaño()) {
+            throw new IndexOutOfBoundsException(
+                    "Index out of bounds. Set size: "
+                            + this.tamaño()
+                            + ", index: "
+                            + index);
+        }
+
         if (!this.contiene(elem)) {
             super.agregar(index, elem);
         }
@@ -90,7 +101,8 @@ public class Conjunto<T> extends ListaSimple<T> implements TDAConjunto<T> {
 
     private void checkConjuntoNull(TDAConjunto<T> otro) {
         if (otro == null) {
-            throw new IllegalArgumentException("El conjunto no puede ser null");
+            throw new IllegalArgumentException(
+                    "El conjunto no puede ser null");
         }
     }
 }

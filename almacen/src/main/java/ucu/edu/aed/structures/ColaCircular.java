@@ -9,7 +9,6 @@ import java.util.function.Predicate;
 
 public class ColaCircular<T> implements TDACola<T> {
 
-    // This the whole queue bru
     private T[] vector;
 
     // Posición del primer elemento
@@ -27,7 +26,8 @@ public class ColaCircular<T> implements TDACola<T> {
     public ColaCircular(int capacidad) {
 
         if (capacidad <= 0) {
-            throw new IllegalArgumentException("La capacidad debe ser mayor a 0");
+            throw new IllegalArgumentException(
+                    "La capacidad debe ser mayor a 0");
         }
 
         this.capacidad = capacidad;
@@ -42,15 +42,17 @@ public class ColaCircular<T> implements TDACola<T> {
         checkElementNull(dato);
 
         // Cola llena
-        if (size == capacidad) {
+        if (this.size == this.capacidad) {
             return false;
         }
 
-        vector[finalCola] = dato;
+        this.vector[this.finalCola] = dato;
 
         // Wraparound
-        finalCola = (finalCola + 1) % capacidad;
-        size++;
+        this.finalCola =
+                (this.finalCola + 1) % this.capacidad;
+
+        this.size++;
 
         return true;
     }
@@ -58,16 +60,18 @@ public class ColaCircular<T> implements TDACola<T> {
     @Override
     public T quitaDeCola() {
         if (esVacio()) {
-            throw new NoSuchElementException("La cola circular está vacía");
+            throw new NoSuchElementException(
+                    "La cola circular está vacía");
         }
 
-        T removedData = vector[frente];
-        vector[frente] = null;
+        T removedData = this.vector[this.frente];
+        this.vector[this.frente] = null;
 
         // Wraparound
-        frente = (frente + 1) % capacidad;
+        this.frente =
+                (this.frente + 1) % this.capacidad;
 
-        size--;
+        this.size--;
 
         return removedData;
     }
@@ -75,10 +79,11 @@ public class ColaCircular<T> implements TDACola<T> {
     @Override
     public T frente() {
         if (esVacio()) {
-            throw new NoSuchElementException("La cola circular está vacía");
+            throw new NoSuchElementException(
+                    "La cola circular está vacía");
         }
 
-        return vector[frente];
+        return this.vector[this.frente];
     }
 
     @Override
@@ -86,7 +91,8 @@ public class ColaCircular<T> implements TDACola<T> {
         checkElementNull(elem);
 
         if (!poneEnCola(elem)) {
-            throw new IllegalStateException("La cola circular está llena");
+            throw new IllegalStateException(
+                    "La cola circular está llena");
         }
     }
 
@@ -95,12 +101,13 @@ public class ColaCircular<T> implements TDACola<T> {
         checkElementNull(elem);
         checkIndexForAdd(index);
 
-        if (size == capacidad) {
-            throw new IllegalStateException("La cola circular está llena");
+        if (this.size == this.capacidad) {
+            throw new IllegalStateException(
+                    "La cola circular está llena");
         }
 
         // Si se agrega al final, equivale a ponerEnCola
-        if (index == size) {
+        if (index == this.size) {
             poneEnCola(elem);
             return;
         }
@@ -109,22 +116,24 @@ public class ColaCircular<T> implements TDACola<T> {
          * Mover los elementos una posición hacia la derecha
          * usando índices lógicos de la cola.
          */
-        for (int i = size; i > index; i--) {
-            vector[physicalIndex(i)] = vector[physicalIndex(i - 1)];
+        for (int i = this.size; i > index; i--) {
+            this.vector[physicalIndex(i)] =
+                    this.vector[physicalIndex(i - 1)];
         }
 
-        vector[physicalIndex(index)] = elem;
+        this.vector[physicalIndex(index)] = elem;
 
-        size++;
+        this.size++;
 
-        finalCola = (frente + size) % capacidad;
+        this.finalCola =
+                (this.frente + this.size) % this.capacidad;
     }
 
     @Override
     public T obtener(int index) {
         checkIndexOutOfBounds(index);
 
-        return vector[physicalIndex(index)];
+        return this.vector[physicalIndex(index)];
     }
 
     @Override
@@ -136,19 +145,21 @@ public class ColaCircular<T> implements TDACola<T> {
             return quitaDeCola();
         }
 
-        T dato = vector[physicalIndex(index)];
+        T dato = this.vector[physicalIndex(index)];
 
         // Desplazar los elementos posteriores
-        for (int i = index; i < size - 1; i++) {
-            vector[physicalIndex(i)] = vector[physicalIndex(i + 1)];
+        for (int i = index; i < this.size - 1; i++) {
+            this.vector[physicalIndex(i)] =
+                    this.vector[physicalIndex(i + 1)];
         }
 
         // Limpiar la última posición ocupada
-        vector[physicalIndex(size - 1)] = null;
+        this.vector[physicalIndex(this.size - 1)] = null;
 
-        size--;
+        this.size--;
 
-        finalCola = (frente + size) % capacidad;
+        this.finalCola =
+                (this.frente + this.size) % this.capacidad;
 
         return dato;
     }
@@ -172,9 +183,9 @@ public class ColaCircular<T> implements TDACola<T> {
     public boolean contiene(T elem) {
         checkElementNull(elem);
 
-        for (int i = 0; i < size; i++) {
+        for (int i = 0; i < this.size; i++) {
 
-            if (vector[physicalIndex(i)].equals(elem)) {
+            if (this.vector[physicalIndex(i)].equals(elem)) {
                 return true;
             }
         }
@@ -186,9 +197,9 @@ public class ColaCircular<T> implements TDACola<T> {
     public int indiceDe(T elem) {
         checkElementNull(elem);
 
-        for (int i = 0; i < size; i++) {
+        for (int i = 0; i < this.size; i++) {
 
-            if (vector[physicalIndex(i)].equals(elem)) {
+            if (this.vector[physicalIndex(i)].equals(elem)) {
                 return i;
             }
         }
@@ -199,12 +210,13 @@ public class ColaCircular<T> implements TDACola<T> {
     @Override
     public T buscar(Predicate<T> predicate) {
         if (predicate == null) {
-            throw new IllegalArgumentException("Predicate cannot be null");
+            throw new IllegalArgumentException(
+                    "Predicate cannot be null");
         }
 
-        for (int i = 0; i < size; i++) {
+        for (int i = 0; i < this.size; i++) {
 
-            T dato = vector[physicalIndex(i)];
+            T dato = this.vector[physicalIndex(i)];
 
             if (predicate.test(dato)) {
                 return dato;
@@ -217,14 +229,15 @@ public class ColaCircular<T> implements TDACola<T> {
     @Override
     public TDALista<T> ordenar(Comparator<T> comparator) {
         if (comparator == null) {
-            throw new IllegalArgumentException("Comparator cannot be null");
+            throw new IllegalArgumentException(
+                    "Comparator cannot be null");
         }
 
         ListaSimple<T> sorted = new ListaSimple<>();
 
-        for (int i = 0; i < size; i++) {
+        for (int i = 0; i < this.size; i++) {
 
-            T elem = vector[physicalIndex(i)];
+            T elem = this.vector[physicalIndex(i)];
 
             int position = 0;
 
@@ -258,13 +271,13 @@ public class ColaCircular<T> implements TDACola<T> {
     @Override
     public void vaciar() {
 
-        for (int i = 0; i < capacidad; i++) {
-            vector[i] = null;
+        for (int i = 0; i < this.capacidad; i++) {
+            this.vector[i] = null;
         }
 
-        frente = 0;
-        finalCola = 0;
-        size = 0;
+        this.frente = 0;
+        this.finalCola = 0;
+        this.size = 0;
     }
 
     /*
@@ -282,24 +295,25 @@ public class ColaCircular<T> implements TDACola<T> {
      * logicalIndex 3 → physicalIndex 1
      */
     private int physicalIndex(int logicalIndex) {
-        return (frente + logicalIndex) % capacidad;
+        return (this.frente + logicalIndex)
+                % this.capacidad;
     }
 
     private void checkIndexOutOfBounds(int index) {
-        if (index < 0 || index >= size) {
+        if (index < 0 || index >= this.size) {
             throw new IndexOutOfBoundsException(
                     "Index out of bounds. Queue size: "
-                            + size
+                            + this.size
                             + ", index: "
                             + index);
         }
     }
 
     private void checkIndexForAdd(int index) {
-        if (index < 0 || index > size) {
+        if (index < 0 || index > this.size) {
             throw new IndexOutOfBoundsException(
                     "Index out of bounds. Queue size: "
-                            + size
+                            + this.size
                             + ", index: "
                             + index);
         }
