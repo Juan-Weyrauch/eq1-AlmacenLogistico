@@ -1,0 +1,41 @@
+package ucu.edu.aed.model;
+
+/**
+ * Representa un proveedor que entrega productos al depósito.
+ */
+public class Proveedor {
+
+    /** Identificador único del proveedor. */
+    private String id;
+
+    /** Nombre del proveedor. */
+    private String nombre;
+
+    /**
+     * Crea un nuevo proveedor.
+     *
+     * @param id identificador único del proveedor
+     * @param nombre nombre del proveedor
+     */
+    public Proveedor(String id, String nombre) {
+        // A implementar.
+    }
+
+    /**
+     * Obtiene el identificador del proveedor.
+     *
+     * @return identificador del proveedor
+     */
+    public String getId() {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Obtiene el nombre del proveedor.
+     *
+     * @return nombre del proveedor
+     */
+    public String getNombre() {
+        throw new UnsupportedOperationException();
+    }
+}

@@ -220,7 +220,7 @@ public class ColaCircular<T> implements TDACola<T> {
             throw new IllegalArgumentException("Comparator cannot be null");
         }
 
-        Lista<T> sorted = new Lista<>();
+        ListaSimple<T> sorted = new ListaSimple<>();
 
         for (int i = 0; i < size; i++) {
 

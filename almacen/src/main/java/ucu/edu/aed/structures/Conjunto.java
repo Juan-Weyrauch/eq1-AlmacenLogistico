@@ -2,7 +2,7 @@ package ucu.edu.aed.structures;
 
 import ucu.edu.aed.tda.TDAConjunto;
 
-public class Conjunto<T> extends Lista<T> implements TDAConjunto<T> {
+public class Conjunto<T> extends ListaSimple<T> implements TDAConjunto<T> {
 
     public Conjunto() {
         super();
