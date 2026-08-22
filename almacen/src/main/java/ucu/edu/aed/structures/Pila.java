@@ -4,7 +4,7 @@ import ucu.edu.aed.tda.TDAPila;
 
 import java.util.NoSuchElementException;
 
-public class Pila<T> extends Lista<T> implements TDAPila<T> {
+public class Pila<T> extends ListaSimple<T> implements TDAPila<T> {
 
     public Pila() {
         super();
