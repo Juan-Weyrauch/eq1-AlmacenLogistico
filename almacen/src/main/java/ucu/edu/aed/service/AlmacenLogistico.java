@@ -59,6 +59,9 @@ public class AlmacenLogistico {
 
 
     public TerminalCarga asignarProximaEntrega() {
+        if (entregasPendientes.esVacio()) {
+            return null;
+        }
         TerminalCarga terminal = buscarTerminalLibre();
         if (terminal == null) {
             return null;

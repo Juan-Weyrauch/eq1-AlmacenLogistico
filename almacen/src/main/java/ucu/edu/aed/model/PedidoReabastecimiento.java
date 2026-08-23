@@ -25,6 +25,7 @@ public class PedidoReabastecimiento implements OperacionLogistica {
     public PedidoReabastecimiento(String id, Sucursal sucursal) {
         this.id = id;
         this.sucursal = sucursal;
+        this.lineas = new ListaSimple<>();
     }
 
     /**
@@ -33,7 +34,7 @@ public class PedidoReabastecimiento implements OperacionLogistica {
      * @param linea línea a agregar
      */
     public void agregarLinea(LineaPedido linea) {
-        // A implementar.
+        lineas.agregar(linea);
     }
 
     /**
@@ -44,7 +45,6 @@ public class PedidoReabastecimiento implements OperacionLogistica {
     @Override
     public String getId() {
         return id;
-
     }
 
     /**
@@ -54,7 +54,6 @@ public class PedidoReabastecimiento implements OperacionLogistica {
      */
     public Sucursal getSucursal() {
         return sucursal;
-
     }
 
     /**
@@ -63,7 +62,7 @@ public class PedidoReabastecimiento implements OperacionLogistica {
      * @return lista de líneas del pedido
      */
     public ListaSimple<LineaPedido> getLineas() {
-        throw new UnsupportedOperationException();
+        return lineas;
     }
 
     /**
@@ -75,7 +74,7 @@ public class PedidoReabastecimiento implements OperacionLogistica {
      * @return prioridad del pedido
      */
     public int getPrioridad() {
-        throw new UnsupportedOperationException();
+        return sucursal.getCantidadClientes(); // ajustar si el getter real tiene otro nombre
     }
 
     /**
@@ -85,6 +84,6 @@ public class PedidoReabastecimiento implements OperacionLogistica {
      */
     @Override
     public TipoOperacion getTipoOperacion() {
-        throw new UnsupportedOperationException();
+        return TipoOperacion.CARGA;
     }
 }

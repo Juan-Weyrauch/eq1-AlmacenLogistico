@@ -25,6 +25,7 @@ public class EntregaProveedor implements OperacionLogistica {
     public EntregaProveedor(String id, Proveedor proveedor) {
         this.id = id;
         this.proveedor = proveedor;
+        this.lineas = new ListaSimple<>();
     }
 
     /**
@@ -33,7 +34,7 @@ public class EntregaProveedor implements OperacionLogistica {
      * @param linea línea a agregar
      */
     public void agregarLinea(LineaEntrega linea) {
-        // A implementar.
+        lineas.agregar(linea);
     }
 
     /**
@@ -43,7 +44,7 @@ public class EntregaProveedor implements OperacionLogistica {
      */
     @Override
     public String getId() {
-        throw new UnsupportedOperationException();
+        return id;
     }
 
     /**
@@ -52,7 +53,7 @@ public class EntregaProveedor implements OperacionLogistica {
      * @return proveedor
      */
     public Proveedor getProveedor() {
-        throw new UnsupportedOperationException();
+        return proveedor;
     }
 
     /**
@@ -61,7 +62,7 @@ public class EntregaProveedor implements OperacionLogistica {
      * @return lista de líneas de entrega
      */
     public ListaSimple<LineaEntrega> getLineas() {
-        throw new UnsupportedOperationException();
+        return lineas;
     }
 
     /**
@@ -71,6 +72,6 @@ public class EntregaProveedor implements OperacionLogistica {
      */
     @Override
     public TipoOperacion getTipoOperacion() {
-        throw new UnsupportedOperationException();
+        return TipoOperacion.DESCARGA;
     }
 }
