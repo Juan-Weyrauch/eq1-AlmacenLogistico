@@ -7,7 +7,7 @@ import java.util.function.Predicate;
 
 public class ListaSimple<T> implements TDALista<T> {
 
-    private static class Node<E> {
+    protected static class Node<E> {
         E data;
         Node<E> next;
 
@@ -17,8 +17,8 @@ public class ListaSimple<T> implements TDALista<T> {
         }
     }
 
-    private Node<T> head;
-    private int size;
+    protected Node<T> head;
+    protected int size;
 
     public ListaSimple() {
         this.head = null;

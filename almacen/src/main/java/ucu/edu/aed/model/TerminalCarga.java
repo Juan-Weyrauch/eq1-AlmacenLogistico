@@ -134,4 +134,17 @@ public class TerminalCarga {
         this.operacionActual = null;
         this.estado = EstadoTerminal.LIBRE;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof TerminalCarga)) return false;
+        TerminalCarga otra = (TerminalCarga) obj;
+        return this.numero == otra.numero;
+    }
+
+    @Override
+    public int hashCode() {
+        return Integer.hashCode(numero);
+    }
 }
