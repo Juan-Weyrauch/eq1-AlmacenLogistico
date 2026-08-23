@@ -89,4 +89,16 @@ public class TerminalCarga {
     public void habilitar() {
         // A implementar.
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof TerminalCarga otra)) return false;
+        return this.numero == otra.numero;
+    }
+
+    @Override
+    public int hashCode() {
+        return Integer.hashCode(numero);
+    }
 }
