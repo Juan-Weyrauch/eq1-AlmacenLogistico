@@ -28,7 +28,7 @@ public class LineaEntrega {
      * @return producto entregado
      */
     public Producto getProducto() {
-        throw new UnsupportedOperationException();
+        return producto;
     }
 
     /**
@@ -37,6 +37,6 @@ public class LineaEntrega {
      * @return cantidad entregada
      */
     public int getCantidad() {
-        throw new UnsupportedOperationException();
+        return cantidad;
     }
 }

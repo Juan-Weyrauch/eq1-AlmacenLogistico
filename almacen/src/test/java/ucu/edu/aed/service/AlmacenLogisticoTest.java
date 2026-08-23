@@ -90,10 +90,8 @@ class AlmacenLogisticoTest {
 
     @Test
     void getInventario() {
-        Producto unProducto = new Producto("000", "Maíz", "Buena calidad");
-        almacen.getInventario().registrarProducto(unProducto, 3);
-
-        assertEquals(almacen.getInventario().buscarItem("000"), unProducto.getCodigo());
+        almacen.getInventario().registrarProducto(productoPrueba, 3);
+        assertEquals(productoPrueba.getCodigo(),almacen.getInventario().buscarItem("1").getProducto().getCodigo());
     }
 
 

@@ -43,7 +43,8 @@ public class PedidoReabastecimiento implements OperacionLogistica {
      */
     @Override
     public String getId() {
-        throw new UnsupportedOperationException();
+        return id;
+
     }
 
     /**
@@ -52,7 +53,8 @@ public class PedidoReabastecimiento implements OperacionLogistica {
      * @return sucursal solicitante
      */
     public Sucursal getSucursal() {
-        throw new UnsupportedOperationException();
+        return sucursal;
+
     }
 
     /**

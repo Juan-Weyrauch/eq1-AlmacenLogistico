@@ -33,7 +33,7 @@ public class Producto {
      * @return código del producto
      */
     public String getCodigo() {
-        throw new UnsupportedOperationException();
+        return codigo;
     }
 
     /**
@@ -42,7 +42,7 @@ public class Producto {
      * @return nombre del producto
      */
     public String getNombre() {
-        throw new UnsupportedOperationException();
+        return nombre;
     }
 
     /**
@@ -51,6 +51,7 @@ public class Producto {
      * @return descripción del producto
      */
     public String getDescripcion() {
-        throw new UnsupportedOperationException();
+
+        return descripcion;
     }
 }

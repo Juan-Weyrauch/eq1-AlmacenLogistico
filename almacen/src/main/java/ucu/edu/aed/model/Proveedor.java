@@ -28,7 +28,7 @@ public class Proveedor {
      * @return identificador del proveedor
      */
     public String getId() {
-        throw new UnsupportedOperationException();
+        return id;
     }
 
     /**
@@ -37,6 +37,7 @@ public class Proveedor {
      * @return nombre del proveedor
      */
     public String getNombre() {
-        throw new UnsupportedOperationException();
+        return nombre;
+
     }
 }

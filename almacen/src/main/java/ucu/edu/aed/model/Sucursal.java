@@ -33,7 +33,8 @@ public class Sucursal {
      * @return identificador de la sucursal
      */
     public String getId() {
-        throw new UnsupportedOperationException();
+
+        return id;
     }
 
     /**
@@ -42,7 +43,7 @@ public class Sucursal {
      * @return nombre de la sucursal
      */
     public String getNombre() {
-        throw new UnsupportedOperationException();
+        return nombre;
     }
 
     /**
@@ -51,6 +52,7 @@ public class Sucursal {
      * @return cantidad de clientes
      */
     public int getCantidadClientes() {
-        throw new UnsupportedOperationException();
+
+        return cantidadClientes;
     }
 }
