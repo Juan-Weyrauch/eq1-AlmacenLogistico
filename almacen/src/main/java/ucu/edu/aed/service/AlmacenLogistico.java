@@ -53,6 +53,7 @@ public class AlmacenLogistico {
     }
 
     public void registrarLlegadaProveedor(EntregaProveedor entrega) {
+
         entregasPendientes.agregar(entrega);
     }
 

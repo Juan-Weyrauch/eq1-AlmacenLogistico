@@ -2,8 +2,7 @@ package ucu.edu.aed.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ucu.edu.aed.model.Producto;
-import ucu.edu.aed.model.TerminalCarga;
+import ucu.edu.aed.model.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -11,8 +10,9 @@ class AlmacenLogisticoTest {
     private AlmacenLogistico almacen;
     private TerminalCarga terminal1;
     private TerminalCarga terminal2;
-
     private Producto productoPrueba;
+
+    private Proveedor proveedorPrueba;
 
     @BeforeEach
     void setUp() {
@@ -20,6 +20,7 @@ class AlmacenLogisticoTest {
         terminal1 = new TerminalCarga(1);
         terminal2 = new TerminalCarga(2);
         productoPrueba = new Producto("1","prueba","es una prueba");
+        proveedorPrueba = new Proveedor("1","prueba");
 
     }
 
@@ -58,10 +59,12 @@ class AlmacenLogisticoTest {
 
     @Test
     void registrarLlegadaProveedor() {
+
     }
 
     @Test
     void asignarProximaEntrega() {
+
     }
 
     @Test
@@ -70,10 +73,15 @@ class AlmacenLogisticoTest {
 
     @Test
     void registrarPedidoReabastecimiento() {
+        Sucursal unaSucursal = new Sucursal("1","prueba",10);
+        PedidoReabastecimiento pedido = new PedidoReabastecimiento("21",unaSucursal);
+        almacen.registrarPedidoReabastecimiento(pedido);
+        assertEquals(almacen.buscarPedidoPendientePorSucursal("1"), pedido);
     }
 
     @Test
     void despacharProximoPedido() {
+
     }
 
     @Test
@@ -97,6 +105,10 @@ class AlmacenLogisticoTest {
 
     @Test
     void getTerminales() {
+        assertTrue(almacen.getTerminales().esVacio());
+        almacen.registrarTerminal(terminal1);
+        almacen.registrarTerminal(terminal2);
+        assertEquals(2, almacen.getTerminales().tamaño());
     }
 
     @Test
