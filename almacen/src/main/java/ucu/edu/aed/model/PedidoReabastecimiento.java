@@ -23,7 +23,8 @@ public class PedidoReabastecimiento implements OperacionLogistica {
      * @param sucursal sucursal que realiza el pedido
      */
     public PedidoReabastecimiento(String id, Sucursal sucursal) {
-        // A implementar.
+        this.id = id;
+        this.sucursal = sucursal;
     }
 
     /**

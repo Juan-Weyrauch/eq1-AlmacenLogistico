@@ -22,7 +22,9 @@ public class Sucursal {
      * @param cantidadClientes cantidad de clientes de la sucursal
      */
     public Sucursal(String id, String nombre, int cantidadClientes) {
-        // A implementar.
+        this.id = id;
+        this.nombre = nombre;
+        this.cantidadClientes = cantidadClientes;
     }
 
     /**

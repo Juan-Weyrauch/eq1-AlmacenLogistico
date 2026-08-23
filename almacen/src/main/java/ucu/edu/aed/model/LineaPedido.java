@@ -18,7 +18,8 @@ public class LineaPedido {
      * @param cantidad cantidad solicitada
      */
     public LineaPedido(Producto producto, int cantidad) {
-        // A implementar.
+        this.producto = producto;
+        this.cantidad = cantidad;
     }
 
     /**

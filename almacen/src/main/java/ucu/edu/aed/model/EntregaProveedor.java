@@ -23,7 +23,8 @@ public class EntregaProveedor implements OperacionLogistica {
      * @param proveedor proveedor responsable de la entrega
      */
     public EntregaProveedor(String id, Proveedor proveedor) {
-        // A implementar.
+        this.id = id;
+        this.proveedor = proveedor;
     }
 
     /**

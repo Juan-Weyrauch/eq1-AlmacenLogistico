@@ -18,7 +18,8 @@ public class LineaEntrega {
      * @param cantidad cantidad entregada
      */
     public LineaEntrega(Producto producto, int cantidad) {
-        // A implementar.
+        this.producto = producto;
+        this.cantidad = cantidad;
     }
 
     /**

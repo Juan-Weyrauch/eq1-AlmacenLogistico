@@ -2,6 +2,9 @@ package ucu.edu.aed.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import ucu.edu.aed.model.Inventario;
+import ucu.edu.aed.model.ItemInventario;
+import ucu.edu.aed.model.Producto;
 import ucu.edu.aed.model.TerminalCarga;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -65,6 +68,10 @@ class AlmacenLogisticoTest {
 
     @Test
     void getInventario() {
+        Producto unProducto = new Producto("000", "Maíz", "Buena calidad");
+        almacen.getInventario().registrarProducto(unProducto, 3);
+
+        assertEquals(almacen.getInventario().buscarItem("000"), unProducto.getCodigo());
     }
 
     @Test

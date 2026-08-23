@@ -18,7 +18,8 @@ public class Proveedor {
      * @param nombre nombre del proveedor
      */
     public Proveedor(String id, String nombre) {
-        // A implementar.
+        this.id = id;
+        this.nombre = nombre;
     }
 
     /**

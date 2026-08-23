@@ -22,7 +22,9 @@ public class Producto {
      * @param descripcion descripción del producto
      */
     public Producto(String codigo, String nombre, String descripcion) {
-        // A implementar.
+        this.codigo = codigo;
+        this.nombre = nombre;
+        this.descripcion = descripcion;
     }
 
     /**
