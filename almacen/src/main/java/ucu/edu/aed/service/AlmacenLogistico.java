@@ -1,13 +1,10 @@
 package ucu.edu.aed.service;
 
-import ucu.edu.aed.model.EntregaProveedor;
-import ucu.edu.aed.model.Inventario;
-import ucu.edu.aed.model.PedidoReabastecimiento;
-import ucu.edu.aed.model.Producto;
-import ucu.edu.aed.model.TerminalCarga;
+import ucu.edu.aed.model.*;
 import ucu.edu.aed.structures.Cola;
 import ucu.edu.aed.structures.ColaPrioridad;
 import ucu.edu.aed.structures.ListaArray;
+import ucu.edu.aed.structures.ListaSimple;
 
 /**
  * Coordina las principales operaciones del almacén logístico.
@@ -30,16 +27,32 @@ public class AlmacenLogistico {
      * Crea un nuevo almacén logístico.
      */
     public AlmacenLogistico() {
-        // A implementar.
+        this.inventario = new Inventario();
+        this.terminales = new ListaArray<>();
+        this.entregasPendientes = new Cola<>();
+        //this.pedidosPendientes = new ColaPrioridad<>(); -> me pide un atributo ¿?
+    }
+
+    private TerminalCarga buscarTerminalPorNumero(int numero) {
+        for (int i = 0; i < terminales.tamaño(); i++) {
+            TerminalCarga terminal = terminales.obtener(i);
+            if (terminal.getNumero() == numero) {
+                return terminal;
+            }
+        }
+        return null;
     }
 
     /**
      * Registra terminales.
-     * 
+     *
      * @param terminal terminal a registrar
      */
     public void registrarTerminal(TerminalCarga terminal) {
-        // A implementar.
+        if (terminales.contiene(terminal)) {
+            throw new IllegalArgumentException("Terminal ya registrada " + terminal.getNumero());
+        }
+        terminales.agregar(terminal);
     }
 
     /**
@@ -49,7 +62,7 @@ public class AlmacenLogistico {
      * @param stockInicial cantidad inicial disponible
      */
     public void registrarProducto(Producto producto, int stockInicial) {
-        // A implementar.
+        inventario.registrarProducto(producto, stockInicial);
     }
 
     /**
@@ -58,7 +71,7 @@ public class AlmacenLogistico {
      * @param entrega entrega recibida
      */
     public void registrarLlegadaProveedor(EntregaProveedor entrega) {
-        // A implementar.
+        entregasPendientes.agregar(entrega);
     }
 
     /**
@@ -69,7 +82,13 @@ public class AlmacenLogistico {
      * @return terminal asignada a la entrega
      */
     public TerminalCarga asignarProximaEntrega() {
-        throw new UnsupportedOperationException();
+        TerminalCarga terminal = buscarTerminalLibre();
+        if (terminal == null) {
+            return null;
+        }
+        EntregaProveedor entrega = entregasPendientes.quitaDeCola();
+        terminal.asignarOperacion(entrega);
+        return terminal;
     }
 
     /**
@@ -78,7 +97,23 @@ public class AlmacenLogistico {
      * @param numeroTerminal número de la terminal utilizada
      */
     public void finalizarDescarga(int numeroTerminal) {
-        // A implementar.
+        TerminalCarga terminal = buscarTerminalPorNumero(numeroTerminal);
+        if (terminal == null) {
+            throw new IllegalArgumentException("No existe la terminal " + numeroTerminal);
+        }
+
+        OperacionLogistica operacion = terminal.getOperacionActual();
+        if (operacion == null || operacion.getTipoOperacion() != TipoOperacion.DESCARGA) {
+            throw new IllegalStateException("La terminal " + numeroTerminal + " no tiene una descarga en curso");
+        }
+
+        EntregaProveedor entrega = (EntregaProveedor) operacion;
+        ListaSimple<LineaEntrega> lineas = entrega.getLineas();
+        for (int i = 0; i < lineas.tamaño(); i++) {
+            LineaEntrega linea = lineas.obtener(i);
+            inventario.aumentarStock(linea.getProducto(), linea.getCantidad());
+        }
+        terminal.liberar();
     }
 
     /**
@@ -96,7 +131,7 @@ public class AlmacenLogistico {
      * @return terminal asignada al pedido
      */
     public TerminalCarga despacharProximoPedido() {
-        // TODO: 
+        // TODO:
         // - compruebe que hay stock para todo el pedido;
         // - descuente el stock;
         // - asigne el pedido a la terminal.
@@ -109,8 +144,17 @@ public class AlmacenLogistico {
      * @param numeroTerminal número de la terminal utilizada
      */
     public void finalizarCarga(int numeroTerminal) {
-        // A implementar.
-        // recorrer las LineaEntrega, aumentar el inventario y después liberar la terminal..
+        TerminalCarga terminal = buscarTerminalPorNumero(numeroTerminal);
+        if (terminal == null) {
+            throw new IllegalArgumentException("No existe la terminal " + numeroTerminal);
+        }
+
+        OperacionLogistica operacion = terminal.getOperacionActual();
+        if (operacion == null || operacion.getTipoOperacion() != TipoOperacion.CARGA) {
+            throw new IllegalStateException("La terminal " + numeroTerminal + " no tiene una carga en curso");
+        }
+
+        terminal.liberar();
     }
 
     /**
@@ -119,7 +163,44 @@ public class AlmacenLogistico {
      * @return primera terminal libre encontrada
      */
     public TerminalCarga buscarTerminalLibre() {
-        throw new UnsupportedOperationException();
+        for (int i = 0; i < terminales.tamaño(); i++) {
+            TerminalCarga terminal = terminales.obtener(i);
+            if (terminal.getEstado() == EstadoTerminal.LIBRE) {
+                return terminal;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Cuenta cuántas unidades hay en total en el inventario, sumando el stock
+     * de todos los productos registrados.
+     *
+     * @return cantidad total de unidades en inventario
+     */
+    public int cantidadTotalUnidadesEnInventario() {
+        int total = 0;
+        ListaArray<ItemInventario> items = inventario.getItems();
+        for (int i = 0; i < items.tamaño(); i++) {
+            total += items.obtener(i).getStock();
+        }
+        return total;
+    }
+
+    /**
+     * Cuenta cuántas terminales se encuentran en un estado determinado.
+     *
+     * @param estado estado a contar
+     * @return cantidad de terminales en ese estado
+     */
+    public int contarTerminalesPorEstado(EstadoTerminal estado) {
+        int contador = 0;
+        for (int i = 0; i < terminales.tamaño(); i++) {
+            if (terminales.obtener(i).getEstado() == estado) {
+                contador++;
+            }
+        }
+        return contador;
     }
 
     /**
@@ -128,7 +209,7 @@ public class AlmacenLogistico {
      * @return inventario
      */
     public Inventario getInventario() {
-        throw new UnsupportedOperationException();
+        return inventario;
     }
 
     /**
@@ -137,6 +218,56 @@ public class AlmacenLogistico {
      * @return lista de terminales
      */
     public ListaArray<TerminalCarga> getTerminales() {
-        throw new UnsupportedOperationException();
+        return terminales;
+    }
+
+    /**
+     * Busca los productos cuyo stock actual está por debajo de un umbral dado.
+     *
+     * @param umbral cantidad límite para considerar el stock como bajo
+     * @return ítems de inventario con stock por debajo del umbral
+     */
+    public ListaSimple<ItemInventario> productosConStockBajo(int umbral) {
+        ListaSimple<ItemInventario> resultado = new ListaSimple<>();
+        ListaArray<ItemInventario> items = inventario.getItems();
+        for (int i = 0; i < items.tamaño(); i++) {
+            ItemInventario item = items.obtener(i);
+            if (item.getStock() < umbral) {
+                resultado.agregar(item);
+            }
+        }
+        return resultado;
+    }
+
+    /**
+     * Busca, entre las entregas pendientes, la primera correspondiente a un proveedor.
+     *
+     * @param proveedorId identificador del proveedor buscado
+     * @return entrega pendiente de ese proveedor, o null si no hay ninguna
+     */
+    public EntregaProveedor buscarEntregaPendientePorProveedor(String proveedorId) {
+        for (int i = 0; i < entregasPendientes.tamaño(); i++) {
+            EntregaProveedor entrega = entregasPendientes.obtener(i);
+            if (entrega.getProveedor().getId().equals(proveedorId)) {
+                return entrega;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Busca, entre los pedidos pendientes, el primero correspondiente a una sucursal.
+     *
+     * @param sucursalId identificador de la sucursal buscada
+     * @return pedido pendiente de esa sucursal, o null si no hay ninguno
+     */
+    public PedidoReabastecimiento buscarPedidoPendientePorSucursal(String sucursalId) {
+        for (int i = 0; i < pedidosPendientes.tamaño(); i++) {
+            PedidoReabastecimiento pedido = pedidosPendientes.obtener(i);
+            if (pedido.getSucursal().getId().equals(sucursalId)) {
+                return pedido;
+            }
+        }
+        return null;
     }
 }
