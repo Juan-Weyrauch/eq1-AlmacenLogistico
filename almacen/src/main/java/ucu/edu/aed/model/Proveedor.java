@@ -18,7 +18,18 @@ public class Proveedor {
      * @param nombre nombre del proveedor
      */
     public Proveedor(String id, String nombre) {
-        // A implementar.
+        if (id == null || id.isBlank()) {
+            throw new IllegalArgumentException(
+                    "El identificador del proveedor no puede ser nulo o vacío.");
+        }
+
+        if (nombre == null || nombre.isBlank()) {
+            throw new IllegalArgumentException(
+                    "El nombre del proveedor no puede ser nulo o vacío.");
+        }
+
+        this.id = id;
+        this.nombre = nombre;
     }
 
     /**
@@ -27,7 +38,7 @@ public class Proveedor {
      * @return identificador del proveedor
      */
     public String getId() {
-        throw new UnsupportedOperationException();
+        return this.id;
     }
 
     /**
@@ -36,6 +47,19 @@ public class Proveedor {
      * @return nombre del proveedor
      */
     public String getNombre() {
-        throw new UnsupportedOperationException();
+        return this.nombre;
+    }
+
+    /**
+     * Devuelve una representación textual del proveedor.
+     *
+     * @return información del proveedor
+     */
+    @Override
+    public String toString() {
+        return "Proveedor{" +
+                "id='" + this.id + '\'' +
+                ", nombre='" + this.nombre + '\'' +
+                '}';
     }
 }

@@ -22,7 +22,19 @@ public class Producto {
      * @param descripcion descripción del producto
      */
     public Producto(String codigo, String nombre, String descripcion) {
-        // A implementar.
+        if (codigo == null || codigo.isBlank()) {
+            throw new IllegalArgumentException(
+                    "El código del producto no puede ser nulo o vacío.");
+        }
+
+        if (nombre == null || nombre.isBlank()) {
+            throw new IllegalArgumentException(
+                    "El nombre del producto no puede ser nulo o vacío.");
+        }
+
+        this.codigo = codigo;
+        this.nombre = nombre;
+        this.descripcion = descripcion;
     }
 
     /**
@@ -31,7 +43,7 @@ public class Producto {
      * @return código del producto
      */
     public String getCodigo() {
-        throw new UnsupportedOperationException();
+        return this.codigo;
     }
 
     /**
@@ -40,7 +52,7 @@ public class Producto {
      * @return nombre del producto
      */
     public String getNombre() {
-        throw new UnsupportedOperationException();
+        return this.nombre;
     }
 
     /**
@@ -49,6 +61,20 @@ public class Producto {
      * @return descripción del producto
      */
     public String getDescripcion() {
-        throw new UnsupportedOperationException();
+        return this.descripcion;
+    }
+
+    /**
+     * Devuelve una representación textual del producto.
+     *
+     * @return información del producto
+     */
+    @Override
+    public String toString() {
+        return "Producto{" +
+                "codigo='" + this.codigo + '\'' +
+                ", nombre='" + this.nombre + '\'' +
+                ", descripcion='" + this.descripcion + '\'' +
+                '}';
     }
 }

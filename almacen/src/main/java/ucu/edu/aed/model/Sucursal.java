@@ -22,7 +22,24 @@ public class Sucursal {
      * @param cantidadClientes cantidad de clientes de la sucursal
      */
     public Sucursal(String id, String nombre, int cantidadClientes) {
-        // A implementar.
+        if (id == null || id.isBlank()) {
+            throw new IllegalArgumentException(
+                    "El identificador de la sucursal no puede ser nulo o vacío.");
+        }
+
+        if (nombre == null || nombre.isBlank()) {
+            throw new IllegalArgumentException(
+                    "El nombre de la sucursal no puede ser nulo o vacío.");
+        }
+
+        if (cantidadClientes < 0) {
+            throw new IllegalArgumentException(
+                    "La cantidad de clientes no puede ser negativa.");
+        }
+
+        this.id = id;
+        this.nombre = nombre;
+        this.cantidadClientes = cantidadClientes;
     }
 
     /**
@@ -31,7 +48,7 @@ public class Sucursal {
      * @return identificador de la sucursal
      */
     public String getId() {
-        throw new UnsupportedOperationException();
+        return this.id;
     }
 
     /**
@@ -40,7 +57,7 @@ public class Sucursal {
      * @return nombre de la sucursal
      */
     public String getNombre() {
-        throw new UnsupportedOperationException();
+        return this.nombre;
     }
 
     /**
@@ -49,6 +66,20 @@ public class Sucursal {
      * @return cantidad de clientes
      */
     public int getCantidadClientes() {
-        throw new UnsupportedOperationException();
+        return this.cantidadClientes;
+    }
+
+    /**
+     * Devuelve una representación textual de la sucursal.
+     *
+     * @return información de la sucursal
+     */
+    @Override
+    public String toString() {
+        return "Sucursal{" +
+                "id='" + this.id + '\'' +
+                ", nombre='" + this.nombre + '\'' +
+                ", cantidadClientes=" + this.cantidadClientes +
+                '}';
     }
 }

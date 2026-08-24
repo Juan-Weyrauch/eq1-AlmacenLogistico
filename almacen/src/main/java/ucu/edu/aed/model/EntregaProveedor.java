@@ -23,16 +23,31 @@ public class EntregaProveedor implements OperacionLogistica {
      * @param proveedor proveedor responsable de la entrega
      */
     public EntregaProveedor(String id, Proveedor proveedor) {
-        // A implementar.
+        if (id == null || id.isBlank()) {
+            throw new IllegalArgumentException(
+                    "El identificador de la entrega no puede ser nulo o vacío.");
+        }
+
+        if (proveedor == null) {
+            throw new IllegalArgumentException(
+                    "El proveedor no puede ser nulo.");
+        }
+
+        this.id = id;
+        this.proveedor = proveedor;
+        this.lineas = new ListaSimple<>();
     }
 
     /**
      * Agrega una línea de productos a la entrega.
      *
+     * La validación de elementos nulos es responsabilidad
+     * de la implementación de ListaSimple.
+     *
      * @param linea línea a agregar
      */
     public void agregarLinea(LineaEntrega linea) {
-        // A implementar.
+        this.lineas.agregar(linea);
     }
 
     /**
@@ -42,7 +57,7 @@ public class EntregaProveedor implements OperacionLogistica {
      */
     @Override
     public String getId() {
-        throw new UnsupportedOperationException();
+        return this.id;
     }
 
     /**
@@ -51,7 +66,7 @@ public class EntregaProveedor implements OperacionLogistica {
      * @return proveedor
      */
     public Proveedor getProveedor() {
-        throw new UnsupportedOperationException();
+        return this.proveedor;
     }
 
     /**
@@ -60,16 +75,33 @@ public class EntregaProveedor implements OperacionLogistica {
      * @return lista de líneas de entrega
      */
     public ListaSimple<LineaEntrega> getLineas() {
-        throw new UnsupportedOperationException();
+        return this.lineas;
     }
 
     /**
      * Obtiene el tipo de operación logística.
      *
+     * Una entrega de proveedor corresponde a una descarga,
+     * ya que los productos recibidos son descargados en el almacén.
+     *
      * @return tipo de operación
      */
     @Override
     public TipoOperacion getTipoOperacion() {
-        throw new UnsupportedOperationException();
+        return TipoOperacion.DESCARGA;
+    }
+
+    /**
+     * Devuelve una representación textual de la entrega.
+     *
+     * @return información de la entrega
+     */
+    @Override
+    public String toString() {
+        return "EntregaProveedor{" +
+                "id='" + this.id + '\'' +
+                ", proveedor=" + this.proveedor +
+                ", cantidadLineas=" + this.lineas.tamaño() +
+                '}';
     }
 }

@@ -18,7 +18,18 @@ public class LineaPedido {
      * @param cantidad cantidad solicitada
      */
     public LineaPedido(Producto producto, int cantidad) {
-        // A implementar.
+        if (producto == null) {
+            throw new IllegalArgumentException(
+                    "El producto de la línea de pedido no puede ser nulo.");
+        }
+
+        if (cantidad <= 0) {
+            throw new IllegalArgumentException(
+                    "La cantidad solicitada debe ser mayor que cero.");
+        }
+
+        this.producto = producto;
+        this.cantidad = cantidad;
     }
 
     /**
@@ -27,7 +38,7 @@ public class LineaPedido {
      * @return producto solicitado
      */
     public Producto getProducto() {
-        throw new UnsupportedOperationException();
+        return this.producto;
     }
 
     /**
@@ -36,6 +47,19 @@ public class LineaPedido {
      * @return cantidad solicitada
      */
     public int getCantidad() {
-        throw new UnsupportedOperationException();
+        return this.cantidad;
+    }
+
+    /**
+     * Devuelve una representación textual de la línea del pedido.
+     *
+     * @return información de la línea
+     */
+    @Override
+    public String toString() {
+        return "LineaPedido{" +
+                "producto=" + this.producto +
+                ", cantidad=" + this.cantidad +
+                '}';
     }
 }
