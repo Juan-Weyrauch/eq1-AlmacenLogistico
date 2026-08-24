@@ -8,7 +8,6 @@ import ucu.edu.aed.structures.ListaSimple;
 
 import java.util.Comparator;
 
-
 public class AlmacenLogistico {
 
     private Inventario inventario;
@@ -19,14 +18,12 @@ public class AlmacenLogistico {
 
     private ColaPrioridad<PedidoReabastecimiento> pedidosPendientes;
 
-
     public AlmacenLogistico() {
         this.inventario = new Inventario();
         this.terminales = new ListaArray<>();
         this.entregasPendientes = new Cola<>();
         this.pedidosPendientes = new ColaPrioridad<>(
-                Comparator.comparingInt(PedidoReabastecimiento::getPrioridad)
-        );
+                Comparator.comparingInt(PedidoReabastecimiento::getPrioridad));
     }
 
     private TerminalCarga buscarTerminalPorNumero(int numero) {
@@ -39,14 +36,12 @@ public class AlmacenLogistico {
         return null;
     }
 
-
     public void registrarTerminal(TerminalCarga terminal) {
         if (terminales.contiene(terminal)) {
             throw new IllegalArgumentException("Terminal ya registrada " + terminal.getNumero());
         }
         terminales.agregar(terminal);
     }
-
 
     public void registrarProducto(Producto producto, int stockInicial) {
         inventario.registrarProducto(producto, stockInicial);
@@ -56,7 +51,6 @@ public class AlmacenLogistico {
 
         entregasPendientes.agregar(entrega);
     }
-
 
     public TerminalCarga asignarProximaEntrega() {
         if (entregasPendientes.esVacio()) {
@@ -92,17 +86,18 @@ public class AlmacenLogistico {
     }
 
     public void registrarPedidoReabastecimiento(PedidoReabastecimiento pedido) {
-        if(pedido == null){
+        if (pedido == null) {
             throw new IllegalArgumentException("El pedido no puede ser null");
         }
         pedidosPendientes.poneEnCola(pedido);
     }
+
     public TerminalCarga despacharProximoPedido() {
-        if(pedidosPendientes.esVacio()){
+        if (pedidosPendientes.esVacio()) {
             return null;
         }
         TerminalCarga terminal = buscarTerminalLibre();
-        if(terminal == null){
+        if (terminal == null) {
             return null;
         }
 
@@ -124,7 +119,6 @@ public class AlmacenLogistico {
         terminal.asignarOperacion(pedido);
         return terminal;
     }
-
 
     private boolean hayStockSuficienteParaPedido(ListaSimple<LineaPedido> lineas) {
         for (int i = 0; i < lineas.tamaño(); i++) {
@@ -160,7 +154,6 @@ public class AlmacenLogistico {
 
         return true;
     }
-
 
     public void finalizarCarga(int numeroTerminal) {
         TerminalCarga terminal = buscarTerminalPorNumero(numeroTerminal);
@@ -205,12 +198,42 @@ public class AlmacenLogistico {
         return contador;
     }
 
+    public int cantidadEntregasPendientes() {
+        return this.entregasPendientes.tamaño();
+    }
+
+    public int cantidadPedidosPendientes() {
+        return this.pedidosPendientes.tamaño();
+    }
+
+    public void deshabilitarTerminal(int numeroTerminal) {
+        TerminalCarga terminal = buscarTerminalPorNumero(numeroTerminal);
+
+        if (terminal == null) {
+            throw new IllegalArgumentException(
+                    "No existe la terminal " + numeroTerminal);
+        }
+
+        terminal.deshabilitar();
+    }
+
+    public void habilitarTerminal(int numeroTerminal) {
+        TerminalCarga terminal = buscarTerminalPorNumero(numeroTerminal);
+
+        if (terminal == null) {
+            throw new IllegalArgumentException(
+                    "No existe la terminal " + numeroTerminal);
+        }
+
+        terminal.habilitar();
+    }
+
     public Inventario getInventario() {
-        return inventario;
+        return this.inventario;
     }
 
     public ListaArray<TerminalCarga> getTerminales() {
-        return terminales;
+        return this.terminales;
     }
 
     public ListaSimple<ItemInventario> productosConStockBajo(int umbral) {
@@ -244,4 +267,5 @@ public class AlmacenLogistico {
         }
         return null;
     }
+
 }
