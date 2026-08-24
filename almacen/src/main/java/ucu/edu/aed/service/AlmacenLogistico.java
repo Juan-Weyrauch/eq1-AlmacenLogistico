@@ -106,26 +106,59 @@ public class AlmacenLogistico {
             return null;
         }
 
-        PedidoReabastecimiento pedido = pedidosPendientes.frente();
+        PedidoReabastecimiento pedido = this.pedidosPendientes.frente();
         ListaSimple<LineaPedido> lineas = pedido.getLineas();
 
-        //Verifico que haya stock de todos los productos
-        for(int i=0; i < lineas.tamaño(); i++){
-            LineaPedido linea = lineas.obtener(i);
-            if(!inventario.hayStock(linea.getProducto(), linea.getCantidad())){
-                return null;
-            }
+        // Se valida el pedido completo antes de modificar el inventario.
+        // Esto también contempla que un mismo producto aparezca en varias líneas.
+        if (!hayStockSuficienteParaPedido(lineas)) {
+            return null;
         }
 
-        //si hay stock de todos losproductos los disminuyo
         for (int i = 0; i < lineas.tamaño(); i++) {
             LineaPedido linea = lineas.obtener(i);
-            inventario.disminuirStock(linea.getProducto(), linea.getCantidad());
+            this.inventario.disminuirStock(linea.getProducto(), linea.getCantidad());
         }
 
         pedidosPendientes.quitaDeCola();
         terminal.asignarOperacion(pedido);
         return terminal;
+    }
+
+
+    private boolean hayStockSuficienteParaPedido(ListaSimple<LineaPedido> lineas) {
+        for (int i = 0; i < lineas.tamaño(); i++) {
+            LineaPedido lineaActual = lineas.obtener(i);
+            String codigoActual = lineaActual.getProducto().getCodigo();
+
+            boolean productoYaVerificado = false;
+            for (int j = 0; j < i; j++) {
+                LineaPedido lineaAnterior = lineas.obtener(j);
+                if (lineaAnterior.getProducto().getCodigo().equals(codigoActual)) {
+                    productoYaVerificado = true;
+                    break;
+                }
+            }
+
+            if (productoYaVerificado) {
+                continue;
+            }
+
+            int cantidadTotalRequerida = 0;
+            for (int j = i; j < lineas.tamaño(); j++) {
+                LineaPedido linea = lineas.obtener(j);
+                if (linea.getProducto().getCodigo().equals(codigoActual)) {
+                    cantidadTotalRequerida += linea.getCantidad();
+                }
+            }
+
+            if (!this.inventario.hayStock(
+                    lineaActual.getProducto(), cantidadTotalRequerida)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
 

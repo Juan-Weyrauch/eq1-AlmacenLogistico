@@ -172,6 +172,25 @@ class AlmacenLogisticoTest {
     }
 
     @Test
+    void despacharPedidoConProductoRepetidoYSinStockTotalNoDescuentaParcialmente() {
+        almacen.registrarTerminal(terminal1);
+        almacen.registrarProducto(productoPrueba, 6);
+
+        Sucursal sucursal = new Sucursal("1", "prueba", 10);
+        PedidoReabastecimiento pedido = new PedidoReabastecimiento("21", sucursal);
+        pedido.agregarLinea(new LineaPedido(productoPrueba, 4));
+        pedido.agregarLinea(new LineaPedido(productoPrueba, 4));
+        almacen.registrarPedidoReabastecimiento(pedido);
+
+        TerminalCarga resultado = almacen.despacharProximoPedido();
+
+        assertNull(resultado);
+        assertEquals(6, almacen.getInventario().obtenerStock(productoPrueba.getCodigo()));
+        assertEquals(pedido, almacen.buscarPedidoPendientePorSucursal("1"));
+        assertTrue(terminal1.estaLibre());
+    }
+
+    @Test
     void despacharProximoPedidoSinTerminalLibre() {
         almacen.registrarProducto(productoPrueba, 10);
 
@@ -181,6 +200,60 @@ class AlmacenLogisticoTest {
         almacen.registrarPedidoReabastecimiento(pedido);
 
         assertNull(almacen.despacharProximoPedido());
+    }
+
+    @Test
+    void despacharPedidosPriorizaSucursalConMasClientes() {
+        almacen.registrarTerminal(terminal1);
+        almacen.registrarProducto(productoPrueba, 20);
+
+        PedidoReabastecimiento prioridadBaja = new PedidoReabastecimiento(
+                "P1", new Sucursal("S1", "Sucursal 1", 50));
+        prioridadBaja.agregarLinea(new LineaPedido(productoPrueba, 2));
+
+        PedidoReabastecimiento prioridadAlta = new PedidoReabastecimiento(
+                "P2", new Sucursal("S2", "Sucursal 2", 200));
+        prioridadAlta.agregarLinea(new LineaPedido(productoPrueba, 2));
+
+        almacen.registrarPedidoReabastecimiento(prioridadBaja);
+        almacen.registrarPedidoReabastecimiento(prioridadAlta);
+
+        TerminalCarga asignada = almacen.despacharProximoPedido();
+
+        assertEquals(prioridadAlta, asignada.getOperacionActual());
+        assertEquals(prioridadBaja, almacen.buscarPedidoPendientePorSucursal("S1"));
+        assertNull(almacen.buscarPedidoPendientePorSucursal("S2"));
+    }
+
+    @Test
+    void pedidosConMismaPrioridadMantienenFIFO() {
+        almacen.registrarTerminal(terminal1);
+        almacen.registrarProducto(productoPrueba, 20);
+
+        PedidoReabastecimiento primero = new PedidoReabastecimiento(
+                "P1", new Sucursal("S1", "Sucursal 1", 100));
+        primero.agregarLinea(new LineaPedido(productoPrueba, 2));
+
+        PedidoReabastecimiento segundo = new PedidoReabastecimiento(
+                "P2", new Sucursal("S2", "Sucursal 2", 100));
+        segundo.agregarLinea(new LineaPedido(productoPrueba, 2));
+
+        almacen.registrarPedidoReabastecimiento(primero);
+        almacen.registrarPedidoReabastecimiento(segundo);
+
+        TerminalCarga asignada = almacen.despacharProximoPedido();
+
+        assertEquals(primero, asignada.getOperacionActual());
+        assertEquals(segundo, almacen.buscarPedidoPendientePorSucursal("S2"));
+    }
+
+    @Test
+    void buscarTerminalLibreIgnoraTerminalDeshabilitada() {
+        almacen.registrarTerminal(terminal1);
+        almacen.registrarTerminal(terminal2);
+        terminal1.deshabilitar();
+
+        assertEquals(terminal2, almacen.buscarTerminalLibre());
     }
 
     @Test
