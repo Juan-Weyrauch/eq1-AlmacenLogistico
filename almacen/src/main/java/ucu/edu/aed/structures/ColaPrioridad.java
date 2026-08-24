@@ -55,7 +55,7 @@ public class ColaPrioridad<T> extends ListaSimple<T> implements TDAColaPrioridad
         if (esVacio()) {
             throw new NoSuchElementException("La cola de prioridad está vacía");
         }
-        return super.remover(0); // bypassea el override de abajo; O(1) real
+        return super.remover(0);
     }
 
     @Override

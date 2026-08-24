@@ -138,8 +138,7 @@ public class TerminalCarga {
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
-        if (!(obj instanceof TerminalCarga)) return false;
-        TerminalCarga otra = (TerminalCarga) obj;
+        if (!(obj instanceof TerminalCarga otra)) return false;
         return this.numero == otra.numero;
     }
 

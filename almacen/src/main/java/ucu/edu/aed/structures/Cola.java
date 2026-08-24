@@ -57,6 +57,12 @@ public class Cola<T> extends ListaSimple<T> implements TDACola<T> {
     }
 
     @Override
+    public void agregar(T elem) {
+        poneEnCola(elem);
+    }
+
+
+    @Override
     public void agregar(int index, T elem) {
         throw new UnsupportedOperationException(
                 "No se puede insertar en una posición arbitraria de una cola; use poneEnCola()");
@@ -78,10 +84,5 @@ public class Cola<T> extends ListaSimple<T> implements TDACola<T> {
         if (elem == null) {
             throw new IllegalArgumentException("Input element cannot be null");
         }
-    }
-
-    @Override
-    public void agregar(T elem) {
-        poneEnCola(elem);
     }
 }
