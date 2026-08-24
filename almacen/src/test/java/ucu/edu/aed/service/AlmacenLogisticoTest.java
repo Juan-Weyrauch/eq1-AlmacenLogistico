@@ -361,4 +361,23 @@ class AlmacenLogisticoTest {
     void buscarPedidoPendientePorSucursalNoEncuentra() {
         assertNull(almacen.buscarPedidoPendientePorSucursal("Id no existe"));
     }
+
+    @Test
+    void entregasDeProveedorMantienenFIFO() {
+        almacen.registrarTerminal(terminal1);
+
+        EntregaProveedor primera = new EntregaProveedor("E1", new Proveedor("P1", "Proveedor 1"));
+
+        EntregaProveedor segunda = new EntregaProveedor("E2", new Proveedor("P2", "Proveedor 2"));
+
+        almacen.registrarLlegadaProveedor(primera);
+        almacen.registrarLlegadaProveedor(segunda);
+
+        TerminalCarga asignada = almacen.asignarProximaEntrega();
+
+        assertEquals(primera, asignada.getOperacionActual());
+        assertEquals(
+                segunda,
+                almacen.buscarEntregaPendientePorProveedor("P2"));
+    }
 }
