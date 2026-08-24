@@ -69,8 +69,10 @@ class ListaCircularTest {
         assertEquals(10, lista.remover(0));
         assertEquals(30, lista.remover(1));
         assertEquals(40, lista.remover(1));
+        assertEquals(20, lista.remover(0));
 
         assertTrue(lista.esVacio());
+        assertEquals(0, lista.tamaño());
     }
 
     @Test
@@ -131,8 +133,7 @@ class ListaCircularTest {
         lista.agregar(10);
         lista.agregar(20);
 
-        TDALista<Integer> ordenada =
-                lista.ordenar(Integer::compareTo);
+        TDALista<Integer> ordenada = lista.ordenar(Integer::compareTo);
 
         assertEquals(10, ordenada.obtener(0));
         assertEquals(20, ordenada.obtener(1));

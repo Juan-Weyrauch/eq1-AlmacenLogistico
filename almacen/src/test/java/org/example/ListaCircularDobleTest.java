@@ -8,141 +8,133 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ListaCircularDobleTest {
 
-    @Test
-    void estructuraVacia() {
-        ListaCircularDoble<Integer> lista =
-                new ListaCircularDoble<>();
+        @Test
+        void estructuraVacia() {
+                ListaCircularDoble<Integer> lista = new ListaCircularDoble<>();
 
-        assertTrue(lista.esVacio());
-        assertEquals(0, lista.tamaño());
-    }
+                assertTrue(lista.esVacio());
+                assertEquals(0, lista.tamaño());
+        }
 
-    @Test
-    void unElemento() {
-        ListaCircularDoble<Integer> lista =
-                new ListaCircularDoble<>();
+        @Test
+        void unElemento() {
+                ListaCircularDoble<Integer> lista = new ListaCircularDoble<>();
 
-        lista.agregar(10);
+                lista.agregar(10);
 
-        assertEquals(10, lista.obtener(0));
-    }
+                assertEquals(10, lista.obtener(0));
+        }
 
-    @Test
-    void multiplesElementos() {
-        ListaCircularDoble<Integer> lista =
-                new ListaCircularDoble<>();
+        @Test
+        void multiplesElementos() {
+                ListaCircularDoble<Integer> lista = new ListaCircularDoble<>();
 
-        lista.agregar(10);
-        lista.agregar(20);
-        lista.agregar(30);
+                lista.agregar(10);
+                lista.agregar(20);
+                lista.agregar(30);
 
-        assertEquals(10, lista.obtener(0));
-        assertEquals(20, lista.obtener(1));
-        assertEquals(30, lista.obtener(2));
-    }
+                assertEquals(10, lista.obtener(0));
+                assertEquals(20, lista.obtener(1));
+                assertEquals(30, lista.obtener(2));
+        }
 
-    @Test
-    void insercionInicialMediaYFinal() {
-        ListaCircularDoble<Integer> lista =
-                new ListaCircularDoble<>();
+        @Test
+        void insercionInicialMediaYFinal() {
+                ListaCircularDoble<Integer> lista = new ListaCircularDoble<>();
 
-        lista.agregar(10);
-        lista.agregar(30);
+                lista.agregar(10);
+                lista.agregar(30);
 
-        lista.agregar(0, 5);
-        lista.agregar(2, 20);
-        lista.agregar(4, 40);
+                lista.agregar(0, 5);
+                lista.agregar(2, 20);
+                lista.agregar(4, 40);
 
-        assertEquals(5, lista.obtener(0));
-        assertEquals(10, lista.obtener(1));
-        assertEquals(20, lista.obtener(2));
-        assertEquals(30, lista.obtener(3));
-        assertEquals(40, lista.obtener(4));
-    }
+                assertEquals(5, lista.obtener(0));
+                assertEquals(10, lista.obtener(1));
+                assertEquals(20, lista.obtener(2));
+                assertEquals(30, lista.obtener(3));
+                assertEquals(40, lista.obtener(4));
+        }
 
-    @Test
-    void eliminacionInicialMediaYFinal() {
-        ListaCircularDoble<Integer> lista =
-                new ListaCircularDoble<>();
+        @Test
+        void eliminacionInicialMediaYFinal() {
+                ListaCircularDoble<Integer> lista = new ListaCircularDoble<>();
 
-        lista.agregar(10);
-        lista.agregar(20);
-        lista.agregar(30);
-        lista.agregar(40);
+                lista.agregar(10);
+                lista.agregar(20);
+                lista.agregar(30);
+                lista.agregar(40);
 
-        assertEquals(10, lista.remover(0));
-        assertEquals(30, lista.remover(1));
-        assertEquals(40, lista.remover(1));
+                assertEquals(10, lista.remover(0));
+                assertEquals(30, lista.remover(1));
+                assertEquals(40, lista.remover(1));
+                assertEquals(20, lista.remover(0));
 
-        assertTrue(lista.esVacio());
-    }
+                assertTrue(lista.esVacio());
+                assertEquals(0, lista.tamaño());
+        }
 
-    @Test
-    void busquedas() {
-        ListaCircularDoble<Integer> lista =
-                new ListaCircularDoble<>();
+        @Test
+        void busquedas() {
+                ListaCircularDoble<Integer> lista = new ListaCircularDoble<>();
 
-        lista.agregar(10);
-        lista.agregar(20);
-        lista.agregar(30);
+                lista.agregar(10);
+                lista.agregar(20);
+                lista.agregar(30);
 
-        assertTrue(lista.contiene(20));
-        assertEquals(1, lista.indiceDe(20));
+                assertTrue(lista.contiene(20));
+                assertEquals(1, lista.indiceDe(20));
 
-        assertEquals(30, lista.buscar(x -> x > 25));
-    }
+                assertEquals(30, lista.buscar(x -> x > 25));
+        }
 
-    @Test
-    void indicesInvalidos() {
-        ListaCircularDoble<Integer> lista =
-                new ListaCircularDoble<>();
+        @Test
+        void indicesInvalidos() {
+                ListaCircularDoble<Integer> lista = new ListaCircularDoble<>();
 
-        lista.agregar(10);
+                lista.agregar(10);
 
-        assertThrows(IndexOutOfBoundsException.class,
-                () -> lista.obtener(-1));
+                assertThrows(IndexOutOfBoundsException.class,
+                                () -> lista.obtener(-1));
 
-        assertThrows(IndexOutOfBoundsException.class,
-                () -> lista.obtener(1));
+                assertThrows(IndexOutOfBoundsException.class,
+                                () -> lista.obtener(1));
 
-        assertThrows(IndexOutOfBoundsException.class,
-                () -> lista.agregar(2, 20));
+                assertThrows(IndexOutOfBoundsException.class,
+                                () -> lista.agregar(2, 20));
 
-        assertThrows(IndexOutOfBoundsException.class,
-                () -> lista.remover(1));
-    }
+                assertThrows(IndexOutOfBoundsException.class,
+                                () -> lista.remover(1));
+        }
 
-    @Test
-    void vaciarYReutilizacion() {
-        ListaCircularDoble<Integer> lista =
-                new ListaCircularDoble<>();
+        @Test
+        void vaciarYReutilizacion() {
+                ListaCircularDoble<Integer> lista = new ListaCircularDoble<>();
 
-        lista.agregar(10);
-        lista.agregar(20);
+                lista.agregar(10);
+                lista.agregar(20);
 
-        lista.vaciar();
+                lista.vaciar();
 
-        assertTrue(lista.esVacio());
+                assertTrue(lista.esVacio());
 
-        lista.agregar(30);
+                lista.agregar(30);
 
-        assertEquals(30, lista.obtener(0));
-    }
+                assertEquals(30, lista.obtener(0));
+        }
 
-    @Test
-    void ordenar() {
-        ListaCircularDoble<Integer> lista =
-                new ListaCircularDoble<>();
+        @Test
+        void ordenar() {
+                ListaCircularDoble<Integer> lista = new ListaCircularDoble<>();
 
-        lista.agregar(30);
-        lista.agregar(10);
-        lista.agregar(20);
+                lista.agregar(30);
+                lista.agregar(10);
+                lista.agregar(20);
 
-        TDALista<Integer> ordenada =
-                lista.ordenar(Integer::compareTo);
+                TDALista<Integer> ordenada = lista.ordenar(Integer::compareTo);
 
-        assertEquals(10, ordenada.obtener(0));
-        assertEquals(20, ordenada.obtener(1));
-        assertEquals(30, ordenada.obtener(2));
-    }
+                assertEquals(10, ordenada.obtener(0));
+                assertEquals(20, ordenada.obtener(1));
+                assertEquals(30, ordenada.obtener(2));
+        }
 }
