@@ -3,8 +3,7 @@ package ucu.edu.aed.ui;
 import ucu.edu.aed.model.EntregaProveedor;
 import ucu.edu.aed.model.EstadoTerminal;
 import ucu.edu.aed.model.ItemInventario;
-import ucu.edu.aed.model.LineaEntrega;
-import ucu.edu.aed.model.LineaPedido;
+import ucu.edu.aed.model.LineaProducto;
 import ucu.edu.aed.model.PedidoReabastecimiento;
 import ucu.edu.aed.model.Producto;
 import ucu.edu.aed.model.Proveedor;
@@ -456,7 +455,7 @@ public class MenuConsola {
             Producto producto = leerProductoRegistrado();
             int cantidad = leerEnteroPositivo("Cantidad entregada: ");
 
-            entrega.agregarLinea(new LineaEntrega(producto, cantidad));
+            entrega.agregarLinea(new LineaProducto(producto, cantidad));
             agregarOtra = leerSiNo("Desea agregar otra linea? (s/n): ");
         } while (agregarOtra);
     }
@@ -473,7 +472,7 @@ public class MenuConsola {
             Producto producto = leerProductoRegistrado();
             int cantidad = leerEnteroPositivo("Cantidad solicitada: ");
 
-            pedido.agregarLinea(new LineaPedido(producto, cantidad));
+            pedido.agregarLinea(new LineaProducto(producto, cantidad));
             agregarOtra = leerSiNo("Desea agregar otra linea? (s/n): ");
         } while (agregarOtra);
     }

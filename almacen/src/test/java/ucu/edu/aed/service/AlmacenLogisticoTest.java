@@ -97,7 +97,7 @@ class AlmacenLogisticoTest {
         almacen.registrarProducto(productoPrueba, 5);
 
         EntregaProveedor entrega = new EntregaProveedor("1", proveedorPrueba);
-        entrega.agregarLinea(new LineaEntrega(productoPrueba, 10));
+        entrega.agregarLinea(new LineaProducto(productoPrueba, 10));
         almacen.registrarLlegadaProveedor(entrega);
         almacen.asignarProximaEntrega();
 
@@ -143,7 +143,7 @@ class AlmacenLogisticoTest {
 
         Sucursal sucursal = new Sucursal("1", "prueba", 10);
         PedidoReabastecimiento pedido = new PedidoReabastecimiento("21", sucursal);
-        pedido.agregarLinea(new LineaPedido(productoPrueba, 4));
+        pedido.agregarLinea(new LineaProducto(productoPrueba, 4));
         almacen.registrarPedidoReabastecimiento(pedido);
 
         TerminalCarga asignada = almacen.despacharProximoPedido();
@@ -161,7 +161,7 @@ class AlmacenLogisticoTest {
 
         Sucursal sucursal = new Sucursal("1", "prueba", 10);
         PedidoReabastecimiento pedido = new PedidoReabastecimiento("21", sucursal);
-        pedido.agregarLinea(new LineaPedido(productoPrueba, 4));
+        pedido.agregarLinea(new LineaProducto(productoPrueba, 4));
         almacen.registrarPedidoReabastecimiento(pedido);
 
         TerminalCarga resultado = almacen.despacharProximoPedido();
@@ -178,8 +178,8 @@ class AlmacenLogisticoTest {
 
         Sucursal sucursal = new Sucursal("1", "prueba", 10);
         PedidoReabastecimiento pedido = new PedidoReabastecimiento("21", sucursal);
-        pedido.agregarLinea(new LineaPedido(productoPrueba, 4));
-        pedido.agregarLinea(new LineaPedido(productoPrueba, 4));
+        pedido.agregarLinea(new LineaProducto(productoPrueba, 4));
+        pedido.agregarLinea(new LineaProducto(productoPrueba, 4));
         almacen.registrarPedidoReabastecimiento(pedido);
 
         TerminalCarga resultado = almacen.despacharProximoPedido();
@@ -196,7 +196,7 @@ class AlmacenLogisticoTest {
 
         Sucursal sucursal = new Sucursal("1", "prueba", 10);
         PedidoReabastecimiento pedido = new PedidoReabastecimiento("21", sucursal);
-        pedido.agregarLinea(new LineaPedido(productoPrueba, 4));
+        pedido.agregarLinea(new LineaProducto(productoPrueba, 4));
         almacen.registrarPedidoReabastecimiento(pedido);
 
         assertNull(almacen.despacharProximoPedido());
@@ -209,11 +209,11 @@ class AlmacenLogisticoTest {
 
         PedidoReabastecimiento prioridadBaja = new PedidoReabastecimiento(
                 "P1", new Sucursal("S1", "Sucursal 1", 50));
-        prioridadBaja.agregarLinea(new LineaPedido(productoPrueba, 2));
+        prioridadBaja.agregarLinea(new LineaProducto(productoPrueba, 2));
 
         PedidoReabastecimiento prioridadAlta = new PedidoReabastecimiento(
                 "P2", new Sucursal("S2", "Sucursal 2", 200));
-        prioridadAlta.agregarLinea(new LineaPedido(productoPrueba, 2));
+        prioridadAlta.agregarLinea(new LineaProducto(productoPrueba, 2));
 
         almacen.registrarPedidoReabastecimiento(prioridadBaja);
         almacen.registrarPedidoReabastecimiento(prioridadAlta);
@@ -232,11 +232,11 @@ class AlmacenLogisticoTest {
 
         PedidoReabastecimiento primero = new PedidoReabastecimiento(
                 "P1", new Sucursal("S1", "Sucursal 1", 100));
-        primero.agregarLinea(new LineaPedido(productoPrueba, 2));
+        primero.agregarLinea(new LineaProducto(productoPrueba, 2));
 
         PedidoReabastecimiento segundo = new PedidoReabastecimiento(
                 "P2", new Sucursal("S2", "Sucursal 2", 100));
-        segundo.agregarLinea(new LineaPedido(productoPrueba, 2));
+        segundo.agregarLinea(new LineaProducto(productoPrueba, 2));
 
         almacen.registrarPedidoReabastecimiento(primero);
         almacen.registrarPedidoReabastecimiento(segundo);
@@ -263,7 +263,7 @@ class AlmacenLogisticoTest {
 
         Sucursal sucursal = new Sucursal("1", "prueba", 10);
         PedidoReabastecimiento pedido = new PedidoReabastecimiento("21", sucursal);
-        pedido.agregarLinea(new LineaPedido(productoPrueba, 4));
+        pedido.agregarLinea(new LineaProducto(productoPrueba, 4));
         almacen.registrarPedidoReabastecimiento(pedido);
         almacen.despacharProximoPedido();
 

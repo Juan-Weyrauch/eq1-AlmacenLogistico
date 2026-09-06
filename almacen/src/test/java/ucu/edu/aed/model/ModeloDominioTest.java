@@ -6,268 +6,239 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ModeloDominioTest {
 
-    @Test
-    void productoDebeConstruirseConDatosValidos() {
-        Producto producto =
-                new Producto("P001", "Arroz", "Paquete de 1 kg");
+        @Test
+        void productoDebeConstruirseConDatosValidos() {
+                Producto producto = new Producto("P001", "Arroz", "Paquete de 1 kg");
 
-        assertEquals("P001", producto.getCodigo());
-        assertEquals("Arroz", producto.getNombre());
-        assertEquals("Paquete de 1 kg", producto.getDescripcion());
-    }
+                assertEquals("P001", producto.getCodigo());
+                assertEquals("Arroz", producto.getNombre());
+                assertEquals("Paquete de 1 kg", producto.getDescripcion());
+        }
 
-    @Test
-    void productoDebeRechazarCodigoONombreInvalido() {
-        assertThrows(
-                IllegalArgumentException.class,
-                () -> new Producto(
-                        null,
-                        "Arroz",
-                        "Descripción"));
+        @Test
+        void productoDebeRechazarCodigoONombreInvalido() {
+                assertThrows(
+                                IllegalArgumentException.class,
+                                () -> new Producto(
+                                                null,
+                                                "Arroz",
+                                                "Descripción"));
 
-        assertThrows(
-                IllegalArgumentException.class,
-                () -> new Producto(
-                        "   ",
-                        "Arroz",
-                        "Descripción"));
+                assertThrows(
+                                IllegalArgumentException.class,
+                                () -> new Producto(
+                                                "   ",
+                                                "Arroz",
+                                                "Descripción"));
 
-        assertThrows(
-                IllegalArgumentException.class,
-                () -> new Producto(
-                        "P001",
-                        null,
-                        "Descripción"));
+                assertThrows(
+                                IllegalArgumentException.class,
+                                () -> new Producto(
+                                                "P001",
+                                                null,
+                                                "Descripción"));
 
-        assertThrows(
-                IllegalArgumentException.class,
-                () -> new Producto(
-                        "P001",
-                        "   ",
-                        "Descripción"));
-    }
+                assertThrows(
+                                IllegalArgumentException.class,
+                                () -> new Producto(
+                                                "P001",
+                                                "   ",
+                                                "Descripción"));
+        }
 
-    @Test
-    void proveedorDebeConstruirseYValidarDatos() {
-        Proveedor proveedor =
-                new Proveedor("PR001", "Proveedor Norte");
+        @Test
+        void proveedorDebeConstruirseYValidarDatos() {
+                Proveedor proveedor = new Proveedor("PR001", "Proveedor Norte");
 
-        assertEquals("PR001", proveedor.getId());
-        assertEquals("Proveedor Norte", proveedor.getNombre());
+                assertEquals("PR001", proveedor.getId());
+                assertEquals("Proveedor Norte", proveedor.getNombre());
 
-        assertThrows(
-                IllegalArgumentException.class,
-                () -> new Proveedor(
-                        null,
-                        "Proveedor Norte"));
+                assertThrows(
+                                IllegalArgumentException.class,
+                                () -> new Proveedor(
+                                                null,
+                                                "Proveedor Norte"));
 
-        assertThrows(
-                IllegalArgumentException.class,
-                () -> new Proveedor(
-                        "PR001",
-                        null));
-    }
+                assertThrows(
+                                IllegalArgumentException.class,
+                                () -> new Proveedor(
+                                                "PR001",
+                                                null));
+        }
 
-    @Test
-    void sucursalDebeConstruirseYValidarDatos() {
-        Sucursal sucursal =
-                new Sucursal("S001", "Centro", 250);
+        @Test
+        void sucursalDebeConstruirseYValidarDatos() {
+                Sucursal sucursal = new Sucursal("S001", "Centro", 250);
 
-        assertEquals("S001", sucursal.getId());
-        assertEquals("Centro", sucursal.getNombre());
-        assertEquals(250, sucursal.getCantidadClientes());
+                assertEquals("S001", sucursal.getId());
+                assertEquals("Centro", sucursal.getNombre());
+                assertEquals(250, sucursal.getCantidadClientes());
 
-        assertThrows(
-                IllegalArgumentException.class,
-                () -> new Sucursal(
-                        null,
-                        "Centro",
-                        250));
+                assertThrows(
+                                IllegalArgumentException.class,
+                                () -> new Sucursal(
+                                                null,
+                                                "Centro",
+                                                250));
 
-        assertThrows(
-                IllegalArgumentException.class,
-                () -> new Sucursal(
-                        "S001",
-                        null,
-                        250));
+                assertThrows(
+                                IllegalArgumentException.class,
+                                () -> new Sucursal(
+                                                "S001",
+                                                null,
+                                                250));
 
-        assertThrows(
-                IllegalArgumentException.class,
-                () -> new Sucursal(
-                        "S001",
-                        "Centro",
-                        -1));
-    }
+                assertThrows(
+                                IllegalArgumentException.class,
+                                () -> new Sucursal(
+                                                "S001",
+                                                "Centro",
+                                                -1));
+        }
 
-    @Test
-    void lineaEntregaDebeAceptarSoloProductoYCantidadValidos() {
-        Producto producto =
-                new Producto("P001", "Arroz", "Paquete de 1 kg");
+        @Test
+        void lineaProductoDebeAceptarSoloProductoYCantidadValidos() {
+                Producto producto = new Producto(
+                                "P001",
+                                "Arroz",
+                                "Paquete de 1 kg");
 
-        LineaEntrega linea =
-                new LineaEntrega(producto, 10);
+                LineaProducto linea = new LineaProducto(producto, 10);
 
-        assertSame(producto, linea.getProducto());
-        assertEquals(10, linea.getCantidad());
+                assertSame(
+                                producto,
+                                linea.getProducto());
 
-        assertThrows(
-                IllegalArgumentException.class,
-                () -> new LineaEntrega(null, 10));
+                assertEquals(
+                                10,
+                                linea.getCantidad());
 
-        assertThrows(
-                IllegalArgumentException.class,
-                () -> new LineaEntrega(producto, 0));
+                assertThrows(
+                                IllegalArgumentException.class,
+                                () -> new LineaProducto(null, 10));
 
-        assertThrows(
-                IllegalArgumentException.class,
-                () -> new LineaEntrega(producto, -1));
-    }
+                assertThrows(
+                                IllegalArgumentException.class,
+                                () -> new LineaProducto(producto, 0));
 
-    @Test
-    void lineaPedidoDebeAceptarSoloProductoYCantidadValidos() {
-        Producto producto =
-                new Producto("P001", "Arroz", "Paquete de 1 kg");
+                assertThrows(
+                                IllegalArgumentException.class,
+                                () -> new LineaProducto(producto, -1));
+        }
 
-        LineaPedido linea =
-                new LineaPedido(producto, 5);
+        @Test
+        void entregaProveedorDebeInicializarLineasYSerDescarga() {
+                Proveedor proveedor = new Proveedor("PR001", "Proveedor Norte");
 
-        assertSame(producto, linea.getProducto());
-        assertEquals(5, linea.getCantidad());
+                Producto producto = new Producto("P001", "Arroz", "Paquete de 1 kg");
 
-        assertThrows(
-                IllegalArgumentException.class,
-                () -> new LineaPedido(null, 5));
+                EntregaProveedor entrega = new EntregaProveedor("E001", proveedor);
 
-        assertThrows(
-                IllegalArgumentException.class,
-                () -> new LineaPedido(producto, 0));
+                assertEquals("E001", entrega.getId());
+                assertSame(proveedor, entrega.getProveedor());
+                assertTrue(entrega.getLineas().esVacio());
 
-        assertThrows(
-                IllegalArgumentException.class,
-                () -> new LineaPedido(producto, -1));
-    }
+                assertEquals(
+                                TipoOperacion.DESCARGA,
+                                entrega.getTipoOperacion());
 
-    @Test
-    void entregaProveedorDebeInicializarLineasYSerDescarga() {
-        Proveedor proveedor =
-                new Proveedor("PR001", "Proveedor Norte");
+                entrega.agregarLinea(
+                                new LineaProducto(producto, 10));
 
-        Producto producto =
-                new Producto("P001", "Arroz", "Paquete de 1 kg");
+                assertEquals(
+                                1,
+                                entrega.getLineas().tamaño());
 
-        EntregaProveedor entrega =
-                new EntregaProveedor("E001", proveedor);
+                /*
+                 * Esta excepción la produce ListaSimple.agregar(),
+                 * no EntregaProveedor.
+                 */
+                assertThrows(
+                                IllegalArgumentException.class,
+                                () -> entrega.agregarLinea(null));
+        }
 
-        assertEquals("E001", entrega.getId());
-        assertSame(proveedor, entrega.getProveedor());
-        assertTrue(entrega.getLineas().esVacio());
+        @Test
+        void entregaProveedorDebeRechazarIdOProveedorInvalido() {
+                Proveedor proveedor = new Proveedor("PR001", "Proveedor Norte");
 
-        assertEquals(
-                TipoOperacion.DESCARGA,
-                entrega.getTipoOperacion());
+                assertThrows(
+                                IllegalArgumentException.class,
+                                () -> new EntregaProveedor(
+                                                null,
+                                                proveedor));
 
-        entrega.agregarLinea(
-                new LineaEntrega(producto, 10));
+                assertThrows(
+                                IllegalArgumentException.class,
+                                () -> new EntregaProveedor(
+                                                "   ",
+                                                proveedor));
 
-        assertEquals(
-                1,
-                entrega.getLineas().tamaño());
+                assertThrows(
+                                IllegalArgumentException.class,
+                                () -> new EntregaProveedor(
+                                                "E001",
+                                                null));
+        }
 
-        /*
-         * Esta excepción la produce ListaSimple.agregar(),
-         * no EntregaProveedor.
-         */
-        assertThrows(
-                IllegalArgumentException.class,
-                () -> entrega.agregarLinea(null));
-    }
+        @Test
+        void pedidoDebeInicializarLineasCalcularPrioridadYSerCarga() {
+                Sucursal sucursal = new Sucursal("S001", "Centro", 250);
 
-    @Test
-    void entregaProveedorDebeRechazarIdOProveedorInvalido() {
-        Proveedor proveedor =
-                new Proveedor("PR001", "Proveedor Norte");
+                Producto producto = new Producto("P001", "Arroz", "Paquete de 1 kg");
 
-        assertThrows(
-                IllegalArgumentException.class,
-                () -> new EntregaProveedor(
-                        null,
-                        proveedor));
+                PedidoReabastecimiento pedido = new PedidoReabastecimiento(
+                                "PE001",
+                                sucursal);
 
-        assertThrows(
-                IllegalArgumentException.class,
-                () -> new EntregaProveedor(
-                        "   ",
-                        proveedor));
+                assertEquals("PE001", pedido.getId());
+                assertSame(sucursal, pedido.getSucursal());
+                assertTrue(pedido.getLineas().esVacio());
 
-        assertThrows(
-                IllegalArgumentException.class,
-                () -> new EntregaProveedor(
-                        "E001",
-                        null));
-    }
+                assertEquals(
+                                250,
+                                pedido.getPrioridad());
 
-    @Test
-    void pedidoDebeInicializarLineasCalcularPrioridadYSerCarga() {
-        Sucursal sucursal =
-                new Sucursal("S001", "Centro", 250);
+                assertEquals(
+                                TipoOperacion.CARGA,
+                                pedido.getTipoOperacion());
 
-        Producto producto =
-                new Producto("P001", "Arroz", "Paquete de 1 kg");
+                pedido.agregarLinea(
+                                new LineaProducto(producto, 5));
 
-        PedidoReabastecimiento pedido =
-                new PedidoReabastecimiento(
-                        "PE001",
-                        sucursal);
+                assertEquals(
+                                1,
+                                pedido.getLineas().tamaño());
 
-        assertEquals("PE001", pedido.getId());
-        assertSame(sucursal, pedido.getSucursal());
-        assertTrue(pedido.getLineas().esVacio());
+                /*
+                 * Esta excepción la produce ListaSimple.agregar(),
+                 * no PedidoReabastecimiento.
+                 */
+                assertThrows(
+                                IllegalArgumentException.class,
+                                () -> pedido.agregarLinea(null));
+        }
 
-        assertEquals(
-                250,
-                pedido.getPrioridad());
+        @Test
+        void pedidoDebeRechazarIdOSucursalInvalida() {
+                Sucursal sucursal = new Sucursal("S001", "Centro", 250);
 
-        assertEquals(
-                TipoOperacion.CARGA,
-                pedido.getTipoOperacion());
+                assertThrows(
+                                IllegalArgumentException.class,
+                                () -> new PedidoReabastecimiento(
+                                                null,
+                                                sucursal));
 
-        pedido.agregarLinea(
-                new LineaPedido(producto, 5));
+                assertThrows(
+                                IllegalArgumentException.class,
+                                () -> new PedidoReabastecimiento(
+                                                "   ",
+                                                sucursal));
 
-        assertEquals(
-                1,
-                pedido.getLineas().tamaño());
-
-        /*
-         * Esta excepción la produce ListaSimple.agregar(),
-         * no PedidoReabastecimiento.
-         */
-        assertThrows(
-                IllegalArgumentException.class,
-                () -> pedido.agregarLinea(null));
-    }
-
-    @Test
-    void pedidoDebeRechazarIdOSucursalInvalida() {
-        Sucursal sucursal =
-                new Sucursal("S001", "Centro", 250);
-
-        assertThrows(
-                IllegalArgumentException.class,
-                () -> new PedidoReabastecimiento(
-                        null,
-                        sucursal));
-
-        assertThrows(
-                IllegalArgumentException.class,
-                () -> new PedidoReabastecimiento(
-                        "   ",
-                        sucursal));
-
-        assertThrows(
-                IllegalArgumentException.class,
-                () -> new PedidoReabastecimiento(
-                        "PE001",
-                        null));
-    }
+                assertThrows(
+                                IllegalArgumentException.class,
+                                () -> new PedidoReabastecimiento(
+                                                "PE001",
+                                                null));
+        }
 }

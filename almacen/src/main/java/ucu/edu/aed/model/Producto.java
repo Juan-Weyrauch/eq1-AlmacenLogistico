@@ -17,8 +17,8 @@ public class Producto implements Comparable<Producto> {
     /**
      * Crea un nuevo producto.
      *
-     * @param codigo código único del producto
-     * @param nombre nombre del producto
+     * @param codigo      código único del producto
+     * @param nombre      nombre del producto
      * @param descripcion descripción del producto
      */
     public Producto(String codigo, String nombre, String descripcion) {
@@ -79,8 +79,12 @@ public class Producto implements Comparable<Producto> {
     }
 
     @Override
-    public int compareTo(Producto o) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'compareTo'");
+    public int compareTo(Producto otro) {
+        if (otro == null) {
+            throw new IllegalArgumentException(
+                    "El producto a comparar no puede ser nulo.");
+        }
+
+        return this.codigo.compareTo(otro.codigo);
     }
 }

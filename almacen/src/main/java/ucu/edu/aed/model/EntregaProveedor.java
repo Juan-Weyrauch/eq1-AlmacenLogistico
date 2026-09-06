@@ -14,7 +14,7 @@ public class EntregaProveedor implements OperacionLogistica {
     private Proveedor proveedor;
 
     /** Productos incluidos en la entrega. */
-    private ListaSimple<LineaEntrega> lineas;
+    private ListaSimple<LineaProducto> lineas;
 
     /**
      * Crea una nueva entrega de proveedor.
@@ -46,7 +46,7 @@ public class EntregaProveedor implements OperacionLogistica {
      *
      * @param linea línea a agregar
      */
-    public void agregarLinea(LineaEntrega linea) {
+    public void agregarLinea(LineaProducto linea) {
         this.lineas.agregar(linea);
     }
 
@@ -74,7 +74,7 @@ public class EntregaProveedor implements OperacionLogistica {
      *
      * @return lista de líneas de entrega
      */
-    public ListaSimple<LineaEntrega> getLineas() {
+    public ListaSimple<LineaProducto> getLineas() {
         return this.lineas;
     }
 

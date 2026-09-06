@@ -77,9 +77,9 @@ public class AlmacenLogistico {
         }
 
         EntregaProveedor entrega = (EntregaProveedor) operacion;
-        ListaSimple<LineaEntrega> lineas = entrega.getLineas();
+        ListaSimple<LineaProducto> lineas = entrega.getLineas();
         for (int i = 0; i < lineas.tamaño(); i++) {
-            LineaEntrega linea = lineas.obtener(i);
+            LineaProducto linea = lineas.obtener(i);
             inventario.aumentarStock(linea.getProducto(), linea.getCantidad());
         }
         terminal.liberar();
@@ -96,39 +96,58 @@ public class AlmacenLogistico {
         if (pedidosPendientes.esVacio()) {
             return null;
         }
+
         TerminalCarga terminal = buscarTerminalLibre();
+
         if (terminal == null) {
             return null;
         }
 
         PedidoReabastecimiento pedido = this.pedidosPendientes.frente();
-        ListaSimple<LineaPedido> lineas = pedido.getLineas();
+        ListaSimple<LineaProducto> lineas = pedido.getLineas();
 
-        // Se valida el pedido completo antes de modificar el inventario.
-        // Esto también contempla que un mismo producto aparezca en varias líneas.
+        /*
+         * Se valida el pedido completo antes de modificar el inventario.
+         * Esto también contempla que un mismo producto aparezca
+         * en varias líneas.
+         */
         if (!hayStockSuficienteParaPedido(lineas)) {
             return null;
         }
 
         for (int i = 0; i < lineas.tamaño(); i++) {
-            LineaPedido linea = lineas.obtener(i);
-            this.inventario.disminuirStock(linea.getProducto(), linea.getCantidad());
+            LineaProducto linea = lineas.obtener(i);
+
+            this.inventario.disminuirStock(
+                    linea.getProducto(),
+                    linea.getCantidad());
         }
 
-        pedidosPendientes.quitaDeCola();
+        this.pedidosPendientes.quitaDeCola();
         terminal.asignarOperacion(pedido);
+
         return terminal;
     }
 
-    private boolean hayStockSuficienteParaPedido(ListaSimple<LineaPedido> lineas) {
+    private boolean hayStockSuficienteParaPedido(
+            ListaSimple<LineaProducto> lineas) {
+
         for (int i = 0; i < lineas.tamaño(); i++) {
-            LineaPedido lineaActual = lineas.obtener(i);
+
+            LineaProducto lineaActual = lineas.obtener(i);
             String codigoActual = lineaActual.getProducto().getCodigo();
 
             boolean productoYaVerificado = false;
+
             for (int j = 0; j < i; j++) {
-                LineaPedido lineaAnterior = lineas.obtener(j);
-                if (lineaAnterior.getProducto().getCodigo().equals(codigoActual)) {
+
+                LineaProducto lineaAnterior = lineas.obtener(j);
+
+                if (lineaAnterior
+                        .getProducto()
+                        .getCodigo()
+                        .equals(codigoActual)) {
+
                     productoYaVerificado = true;
                     break;
                 }
@@ -139,15 +158,24 @@ public class AlmacenLogistico {
             }
 
             int cantidadTotalRequerida = 0;
+
             for (int j = i; j < lineas.tamaño(); j++) {
-                LineaPedido linea = lineas.obtener(j);
-                if (linea.getProducto().getCodigo().equals(codigoActual)) {
+
+                LineaProducto linea = lineas.obtener(j);
+
+                if (linea
+                        .getProducto()
+                        .getCodigo()
+                        .equals(codigoActual)) {
+
                     cantidadTotalRequerida += linea.getCantidad();
                 }
             }
 
             if (!this.inventario.hayStock(
-                    lineaActual.getProducto(), cantidadTotalRequerida)) {
+                    lineaActual.getProducto(),
+                    cantidadTotalRequerida)) {
+
                 return false;
             }
         }

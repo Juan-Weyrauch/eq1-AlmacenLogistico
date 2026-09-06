@@ -14,7 +14,7 @@ public class PedidoReabastecimiento implements OperacionLogistica {
     private Sucursal sucursal;
 
     /** Productos solicitados por la sucursal. */
-    private ListaSimple<LineaPedido> lineas;
+    private ListaSimple<LineaProducto> lineas;
 
     /**
      * Crea un nuevo pedido de reabastecimiento.
@@ -46,7 +46,7 @@ public class PedidoReabastecimiento implements OperacionLogistica {
      *
      * @param linea línea a agregar
      */
-    public void agregarLinea(LineaPedido linea) {
+    public void agregarLinea(LineaProducto linea) {
         this.lineas.agregar(linea);
     }
 
@@ -74,7 +74,7 @@ public class PedidoReabastecimiento implements OperacionLogistica {
      *
      * @return lista de líneas del pedido
      */
-    public ListaSimple<LineaPedido> getLineas() {
+    public ListaSimple<LineaProducto> getLineas() {
         return this.lineas;
     }
 
