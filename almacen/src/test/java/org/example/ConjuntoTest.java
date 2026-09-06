@@ -1,8 +1,8 @@
 package org.example;
 
 import org.junit.jupiter.api.Test;
-import ucu.edu.aed.structures.Conjunto;
-import ucu.edu.aed.tda.TDAConjunto;
+import ucu.edu.aed.structures.linear.Conjunto;
+import ucu.edu.aed.tda.linear.TDAConjunto;
 
 import static org.junit.jupiter.api.Assertions.*;
 

@@ -1,13 +1,13 @@
-package ucu.edu.aed.structures;
-
-import ucu.edu.aed.tda.TDALista;
+package ucu.edu.aed.structures.linear;
 
 import java.util.Comparator;
 import java.util.function.Predicate;
 
-public class ListaCircular<T> implements TDALista<T> {
+import ucu.edu.aed.tda.linear.TDALista;
 
-    private static class Node<E> {
+public class ListaSimple<T> implements TDALista<T> {
+
+    protected static class Node<E> {
         E data;
         Node<E> next;
 
@@ -17,13 +17,11 @@ public class ListaCircular<T> implements TDALista<T> {
         }
     }
 
-    private Node<T> head;
-    private Node<T> tail;
-    private int size;
+    protected Node<T> head;
+    protected int size;
 
-    public ListaCircular() {
+    public ListaSimple() {
         this.head = null;
-        this.tail = null;
         this.size = 0;
     }
 
@@ -35,14 +33,12 @@ public class ListaCircular<T> implements TDALista<T> {
 
         if (this.head == null) {
             this.head = nuevo;
-            this.tail = nuevo;
-
-            nuevo.next = nuevo;
         } else {
-            nuevo.next = this.head;
-
-            this.tail.next = nuevo;
-            this.tail = nuevo;
+            Node<T> actual = this.head;
+            while (actual.next != null) {
+                actual = actual.next;
+            }
+            actual.next = nuevo;
         }
 
         this.size++;
@@ -53,28 +49,16 @@ public class ListaCircular<T> implements TDALista<T> {
         checkElementNull(elem);
         checkIndexForAdd(index);
 
-        if (index == this.size) {
-            agregar(elem);
-            return;
-        }
-
         Node<T> nuevo = new Node<>(elem);
 
         if (index == 0) {
             nuevo.next = this.head;
-
             this.head = nuevo;
-            this.tail.next = this.head;
-
-            this.size++;
-
-            return;
+        } else {
+            Node<T> anterior = obtenerNodo(index - 1);
+            nuevo.next = anterior.next;
+            anterior.next = nuevo;
         }
-
-        Node<T> anterior = obtenerNodo(index - 1);
-
-        nuevo.next = anterior.next;
-        anterior.next = nuevo;
 
         this.size++;
     }
@@ -82,7 +66,6 @@ public class ListaCircular<T> implements TDALista<T> {
     @Override
     public T obtener(int index) {
         checkIndexOutOfBounds(index);
-
         return obtenerNodo(index).data;
     }
 
@@ -90,38 +73,18 @@ public class ListaCircular<T> implements TDALista<T> {
     public T remover(int index) {
         checkIndexOutOfBounds(index);
 
-        if (this.size == 1) {
-            T dato = this.head.data;
-
-            this.head = null;
-            this.tail = null;
-            this.size = 0;
-
-            return dato;
-        }
+        Node<T> eliminado;
 
         if (index == 0) {
-            T dato = this.head.data;
-
+            eliminado = this.head;
             this.head = this.head.next;
-            this.tail.next = this.head;
-            this.size--;
-
-            return dato;
+        } else {
+            Node<T> anterior = obtenerNodo(index - 1);
+            eliminado = anterior.next;
+            anterior.next = eliminado.next;
         }
 
-        Node<T> anterior = obtenerNodo(index - 1);
-        Node<T> eliminado = anterior.next;
-
-        anterior.next = eliminado.next;
-
-        if (eliminado == this.tail) {
-            this.tail = anterior;
-        }
-
-        this.tail.next = this.head;
         this.size--;
-
         return eliminado.data;
     }
 
@@ -129,36 +92,23 @@ public class ListaCircular<T> implements TDALista<T> {
     public boolean remover(T elem) {
         checkElementNull(elem);
 
-        if (this.size == 0) {
+        if (this.head == null) {
             return false;
         }
 
         if (this.head.data.equals(elem)) {
-            remover(0);
-
+            this.head = this.head.next;
+            this.size--;
             return true;
         }
 
         Node<T> actual = this.head;
-
-        for (int i = 0; i < this.size - 1; i++) {
-
+        while (actual.next != null) {
             if (actual.next.data.equals(elem)) {
-
-                Node<T> eliminado = actual.next;
-
-                actual.next = eliminado.next;
-
-                if (eliminado == this.tail) {
-                    this.tail = actual;
-                }
-
-                this.tail.next = this.head;
+                actual.next = actual.next.next;
                 this.size--;
-
                 return true;
             }
-
             actual = actual.next;
         }
 
@@ -175,14 +125,14 @@ public class ListaCircular<T> implements TDALista<T> {
         checkElementNull(elem);
 
         Node<T> actual = this.head;
+        int index = 0;
 
-        for (int i = 0; i < this.size; i++) {
-
+        while (actual != null) {
             if (actual.data.equals(elem)) {
-                return i;
+                return index;
             }
-
             actual = actual.next;
+            index++;
         }
 
         return -1;
@@ -193,13 +143,10 @@ public class ListaCircular<T> implements TDALista<T> {
         checkPredicateNull(criterio);
 
         Node<T> actual = this.head;
-
-        for (int i = 0; i < this.size; i++) {
-
+        while (actual != null) {
             if (criterio.test(actual.data)) {
                 return actual.data;
             }
-
             actual = actual.next;
         }
 
@@ -210,16 +157,11 @@ public class ListaCircular<T> implements TDALista<T> {
     public TDALista<T> ordenar(Comparator<T> comparator) {
         checkComparatorNull(comparator);
 
-        ListaCircular<T> ordenada =
-                new ListaCircular<>();
-
+        ListaSimple<T> ordenada = new ListaSimple<>();
         Node<T> actual = this.head;
 
-        for (int i = 0; i < this.size; i++) {
-            ordenada.insertarOrdenado(
-                    actual.data,
-                    comparator);
-
+        while (actual != null) {
+            ordenada.insertarOrdenado(actual.data, comparator);
             actual = actual.next;
         }
 
@@ -239,97 +181,67 @@ public class ListaCircular<T> implements TDALista<T> {
     @Override
     public void vaciar() {
         this.head = null;
-        this.tail = null;
         this.size = 0;
     }
 
-    // =================== HELPER METHODS ====================
 
     private Node<T> obtenerNodo(int index) {
-
         Node<T> actual = this.head;
-
         for (int i = 0; i < index; i++) {
             actual = actual.next;
         }
-
         return actual;
     }
 
-    private void insertarOrdenado(
-            T elem,
-            Comparator<T> comparator) {
+    private void insertarOrdenado(T elem, Comparator<T> comparator) {
+        Node<T> nuevo = new Node<>(elem);
 
-        if (this.size == 0) {
-            agregar(elem);
-            return;
-        }
-
-        if (comparator.compare(
-                elem,
-                this.head.data) <= 0) {
-
-            agregar(0, elem);
+        if (this.head == null || comparator.compare(elem, this.head.data) <= 0) {
+            nuevo.next = this.head;
+            this.head = nuevo;
+            this.size++;
             return;
         }
 
         Node<T> actual = this.head;
-
-        while (actual.next != this.head
-                && comparator.compare(
-                        elem,
-                        actual.next.data) > 0) {
-
+        while (actual.next != null && comparator.compare(elem, actual.next.data) > 0) {
             actual = actual.next;
         }
 
-        Node<T> nuevo = new Node<>(elem);
-
         nuevo.next = actual.next;
         actual.next = nuevo;
-
-        if (actual == this.tail) {
-            this.tail = nuevo;
-        }
-
-        this.tail.next = this.head;
         this.size++;
     }
 
     private void checkIndexOutOfBounds(int index) {
         if (index < 0 || index >= this.size) {
             throw new IndexOutOfBoundsException(
-                    "Index out of bounds. List size: "
-                            + this.size + ", index: " + index);
+                    "Index out of bounds. List size: " + this.size + ", index: " + index);
         }
     }
 
     private void checkIndexForAdd(int index) {
         if (index < 0 || index > this.size) {
             throw new IndexOutOfBoundsException(
-                    "Index out of bounds. List size: "
-                            + this.size + ", index: " + index);
+                    "Index out of bounds. List size: " + this.size + ", index: " + index);
         }
     }
 
     private void checkElementNull(T elem) {
         if (elem == null) {
-            throw new IllegalArgumentException(
-                    "Input element cannot be null");
+            throw new IllegalArgumentException("Input element cannot be null");
         }
     }
 
     private void checkPredicateNull(Predicate<T> criterio) {
         if (criterio == null) {
-            throw new IllegalArgumentException(
-                    "Predicate cannot be null");
+            throw new IllegalArgumentException("Predicate cannot be null");
         }
     }
 
     private void checkComparatorNull(Comparator<T> comparator) {
         if (comparator == null) {
-            throw new IllegalArgumentException(
-                    "Comparator cannot be null");
+            throw new IllegalArgumentException("Comparator cannot be null");
         }
     }
 }

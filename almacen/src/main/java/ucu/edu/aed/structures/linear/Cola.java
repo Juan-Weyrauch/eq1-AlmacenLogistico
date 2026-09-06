@@ -1,8 +1,8 @@
-package ucu.edu.aed.structures;
-
-import ucu.edu.aed.tda.TDACola;
+package ucu.edu.aed.structures.linear;
 
 import java.util.NoSuchElementException;
+
+import ucu.edu.aed.tda.linear.TDACola;
 
 public class Cola<T> extends ListaSimple<T> implements TDACola<T> {
 

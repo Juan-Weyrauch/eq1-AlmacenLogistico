@@ -3,7 +3,7 @@ package ucu.edu.aed.model;
 /**
  * Representa un producto almacenado en el depósito.
  */
-public class Producto {
+public class Producto implements Comparable<Producto> {
 
     /** Código único que identifica al producto. */
     private String codigo;
@@ -76,5 +76,11 @@ public class Producto {
                 ", nombre='" + this.nombre + '\'' +
                 ", descripcion='" + this.descripcion + '\'' +
                 '}';
+    }
+
+    @Override
+    public int compareTo(Producto o) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'compareTo'");
     }
 }

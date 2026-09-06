@@ -11,8 +11,8 @@ import ucu.edu.aed.model.Proveedor;
 import ucu.edu.aed.model.Sucursal;
 import ucu.edu.aed.model.TerminalCarga;
 import ucu.edu.aed.service.AlmacenLogistico;
-import ucu.edu.aed.structures.ListaArray;
-import ucu.edu.aed.structures.ListaSimple;
+import ucu.edu.aed.structures.linear.ListaArray;
+import ucu.edu.aed.structures.linear.ListaSimple;
 
 import java.util.Scanner;
 

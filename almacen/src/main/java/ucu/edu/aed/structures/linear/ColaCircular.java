@@ -1,11 +1,11 @@
-package ucu.edu.aed.structures;
-
-import ucu.edu.aed.tda.TDACola;
-import ucu.edu.aed.tda.TDALista;
+package ucu.edu.aed.structures.linear;
 
 import java.util.Comparator;
 import java.util.NoSuchElementException;
 import java.util.function.Predicate;
+
+import ucu.edu.aed.tda.linear.TDACola;
+import ucu.edu.aed.tda.linear.TDALista;
 
 public class ColaCircular<T> implements TDACola<T> {
 

@@ -1,9 +1,9 @@
-package ucu.edu.aed.structures;
-
-import ucu.edu.aed.tda.TDAColaPrioridad;
+package ucu.edu.aed.structures.linear;
 
 import java.util.Comparator;
 import java.util.NoSuchElementException;
+
+import ucu.edu.aed.tda.linear.TDAColaPrioridad;
 
 public class ColaPrioridad<T> extends ListaSimple<T> implements TDAColaPrioridad<T> {
 

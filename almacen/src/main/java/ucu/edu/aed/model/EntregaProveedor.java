@@ -1,6 +1,6 @@
 package ucu.edu.aed.model;
 
-import ucu.edu.aed.structures.ListaSimple;
+import ucu.edu.aed.structures.linear.ListaSimple;
 
 /**
  * Representa una entrega de productos realizada por un proveedor.

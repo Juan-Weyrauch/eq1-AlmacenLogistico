@@ -4,7 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 import ucu.edu.aed.model.*;
-import ucu.edu.aed.structures.ListaSimple;
+import ucu.edu.aed.structures.linear.ListaSimple;
 
 import static org.junit.jupiter.api.Assertions.*;
 

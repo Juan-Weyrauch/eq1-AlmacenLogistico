@@ -1,6 +1,6 @@
-package ucu.edu.aed.structures;
+package ucu.edu.aed.structures.linear;
 
-import ucu.edu.aed.tda.TDAConjunto;
+import ucu.edu.aed.tda.linear.TDAConjunto;
 
 public class Conjunto<T> extends ListaSimple<T> implements TDAConjunto<T> {
 

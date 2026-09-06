@@ -1,6 +1,6 @@
 package ucu.edu.aed.model;
 
-import ucu.edu.aed.structures.ListaArray;
+import ucu.edu.aed.structures.linear.ListaArray;
 
 /**
  * Administra los productos y las cantidades almacenadas en el deposito.

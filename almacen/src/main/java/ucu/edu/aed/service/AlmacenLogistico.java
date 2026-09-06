@@ -1,10 +1,10 @@
 package ucu.edu.aed.service;
 
 import ucu.edu.aed.model.*;
-import ucu.edu.aed.structures.Cola;
-import ucu.edu.aed.structures.ColaPrioridad;
-import ucu.edu.aed.structures.ListaArray;
-import ucu.edu.aed.structures.ListaSimple;
+import ucu.edu.aed.structures.linear.Cola;
+import ucu.edu.aed.structures.linear.ColaPrioridad;
+import ucu.edu.aed.structures.linear.ListaArray;
+import ucu.edu.aed.structures.linear.ListaSimple;
 
 import java.util.Comparator;
 

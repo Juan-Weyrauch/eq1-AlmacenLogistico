@@ -1,8 +1,8 @@
 package org.example;
 
 import org.junit.jupiter.api.Test;
-import ucu.edu.aed.structures.ListaSimple;
-import ucu.edu.aed.tda.TDALista;
+import ucu.edu.aed.structures.linear.ListaSimple;
+import ucu.edu.aed.tda.linear.TDALista;
 
 import static org.junit.jupiter.api.Assertions.*;
 

@@ -1,9 +1,9 @@
-package ucu.edu.aed.structures;
-
-import ucu.edu.aed.tda.TDALista;
+package ucu.edu.aed.structures.linear;
 
 import java.util.Comparator;
 import java.util.function.Predicate;
+
+import ucu.edu.aed.tda.linear.TDALista;
 
 public class ListaCircularDoble<T> implements TDALista<T> {
 

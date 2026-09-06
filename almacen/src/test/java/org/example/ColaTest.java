@@ -1,7 +1,7 @@
 package org.example;
 
 import org.junit.jupiter.api.Test;
-import ucu.edu.aed.structures.Cola;
+import ucu.edu.aed.structures.linear.Cola;
 
 import java.util.NoSuchElementException;
 

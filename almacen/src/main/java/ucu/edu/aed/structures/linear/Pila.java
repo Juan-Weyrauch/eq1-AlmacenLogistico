@@ -1,8 +1,8 @@
-package ucu.edu.aed.structures;
-
-import ucu.edu.aed.tda.TDAPila;
+package ucu.edu.aed.structures.linear;
 
 import java.util.NoSuchElementException;
+
+import ucu.edu.aed.tda.linear.TDAPila;
 
 public class Pila<T> extends ListaSimple<T> implements TDAPila<T> {
 
