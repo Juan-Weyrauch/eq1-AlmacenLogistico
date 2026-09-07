@@ -3,6 +3,7 @@ package ucu.edu.aed.structures.hierarchical;
 import java.util.function.Consumer;
 
 import ucu.edu.aed.structures.element.Nodo;
+import ucu.edu.aed.structures.linear.Cola;
 import ucu.edu.aed.tda.element.TDAElemento;
 import ucu.edu.aed.tda.hierarchical.TDAArbolBinario;
 
@@ -167,6 +168,39 @@ public class ArbolBinario<T> implements TDAArbolBinario<T> {
     public void postOrder(Consumer<T> consumidor) {
         if (!raizEsNula()) {
             this.raiz.postOrder(elemento -> consumidor.accept(elemento.getDato()));
+        }
+    }
+
+    // el recorrido es O(n)
+    public void porNiveles(Consumer<T> consumidor) {
+        if (consumidor == null) {
+            throw new IllegalArgumentException(
+                    "consumidor en el metodo 'porNiveles' es nulo");
+        }
+
+        if (this.raizEsNula()) {
+            return;
+        }
+
+        Cola<TDAElemento<T>> cola = new Cola<>();
+
+        cola.poneEnCola(this.raiz);
+
+        // aca arranca el recorrido del arbol BFS
+        while (!cola.esVacio()) {
+
+            TDAElemento<T> nodoActual = cola.frente();
+            cola.quitaDeCola();
+
+            consumidor.accept(nodoActual.getDato());
+
+            if (nodoActual.getHijoIzquierdo() != null) {
+                cola.poneEnCola(nodoActual.getHijoIzquierdo());
+            }
+
+            if (nodoActual.getHijoDerecho() != null) {
+                cola.poneEnCola(nodoActual.getHijoDerecho());
+            }
         }
     }
 
