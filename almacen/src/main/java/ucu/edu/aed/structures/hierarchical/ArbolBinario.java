@@ -152,31 +152,37 @@ public class ArbolBinario<T> implements TDAArbolBinario<T> {
 
     @Override
     public void inOrder(Consumer<T> consumidor) {
+        validarConsumidor(consumidor, "inOrder");
+
         if (!raizEsNula()) {
-            this.raiz.inOrder(elemento -> consumidor.accept(elemento.getDato()));
+            this.raiz.inOrder(
+                    elemento -> consumidor.accept(elemento.getDato()));
         }
     }
 
     @Override
     public void preOrder(Consumer<T> consumidor) {
+        validarConsumidor(consumidor, "preOrder");
+
         if (!raizEsNula()) {
-            this.raiz.preOrder(elemento -> consumidor.accept(elemento.getDato()));
+            this.raiz.preOrder(
+                    elemento -> consumidor.accept(elemento.getDato()));
         }
     }
 
     @Override
     public void postOrder(Consumer<T> consumidor) {
+        validarConsumidor(consumidor, "postOrder");
+
         if (!raizEsNula()) {
-            this.raiz.postOrder(elemento -> consumidor.accept(elemento.getDato()));
+            this.raiz.postOrder(
+                    elemento -> consumidor.accept(elemento.getDato()));
         }
     }
 
     // el recorrido es O(n)
     public void porNiveles(Consumer<T> consumidor) {
-        if (consumidor == null) {
-            throw new IllegalArgumentException(
-                    "consumidor en el metodo 'porNiveles' es nulo");
-        }
+        validarConsumidor(consumidor, "porNiveles");
 
         if (this.raizEsNula()) {
             return;
@@ -224,9 +230,20 @@ public class ArbolBinario<T> implements TDAArbolBinario<T> {
         return this.raizEsNula() ? 0 : this.raiz.cantidadNodosInternos();
     }
 
+    public int altura() {
+        return this.raizEsNula() ? 0 : this.raiz.altura();
+    }
+
     // yo se que no hace falta pero (me) ayuda a la lectura
     private boolean raizEsNula() {
         return this.raiz == null;
+    }
+
+    private void validarConsumidor(Consumer<T> consumidor, String metodo) {
+        if (consumidor == null) {
+            throw new IllegalArgumentException(
+                    "ArbolBinario: consumidor en el metodo '" + metodo + "' es nulo");
+        }
     }
 
 }

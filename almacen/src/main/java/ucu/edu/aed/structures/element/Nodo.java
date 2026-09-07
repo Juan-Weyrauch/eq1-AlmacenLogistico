@@ -257,10 +257,8 @@ public class Nodo<T> implements TDAElemento<T> {
 
     @Override
     public void inOrder(Consumer<TDAElemento<T>> consumidor) {
-        if (consumidor == null) {
-            throw new IllegalArgumentException(
-                    "Nodo: consumidor en el metodo 'inOrder' es nulo.");
-        }
+        validarConsumidor(consumidor, "inOrder");
+
 
         // hijo Izquierdo -> this.dato -> hijo Derecho
         if (this.getHijoIzquierdo() != null) {
@@ -274,10 +272,7 @@ public class Nodo<T> implements TDAElemento<T> {
 
     @Override
     public void preOrder(Consumer<TDAElemento<T>> consumidor) {
-        if (consumidor == null) {
-            throw new IllegalArgumentException(
-                    "Nodo: consumidor en el metodo 'preOrder' es nulo.");
-        }
+        validarConsumidor(consumidor, "preOrder");
 
         // this.dato -> hijo Izquierdo -> hijo Derecho
         consumidor.accept(this);
@@ -291,10 +286,7 @@ public class Nodo<T> implements TDAElemento<T> {
 
     @Override
     public void postOrder(Consumer<TDAElemento<T>> consumidor) {
-        if (consumidor == null) {
-            throw new IllegalArgumentException(
-                    "Nodo: consumidor en el metodo 'postOrder' es nulo.");
-        }
+        validarConsumidor(consumidor, "Nodo: postOrder");
 
         // hijo Izquierdo -> hijo Derecho -> this.dato
         if (this.getHijoIzquierdo() != null) {
@@ -403,5 +395,12 @@ public class Nodo<T> implements TDAElemento<T> {
         // Cada vez que la recursión vuelve hacia arriba,
         // agregamos un nivel.
         return 1 + nivelHijo;
+    }
+
+    private void validarConsumidor(Consumer<?> consumidor, String metodo) {
+        if (consumidor == null) {
+            throw new IllegalArgumentException(
+                    "Nodo: consumidor en el metodo '" + metodo + "' es nulo");
+        }
     }
 }
