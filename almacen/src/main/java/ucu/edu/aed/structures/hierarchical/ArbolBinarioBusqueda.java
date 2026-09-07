@@ -7,7 +7,7 @@ import ucu.edu.aed.structures.linear.Cola;
 import ucu.edu.aed.tda.element.TDAElemento;
 import ucu.edu.aed.tda.hierarchical.TDAArbolBinario;
 
-public class ABB<T> implements TDAArbolBinario<T> {
+public class ArbolBinarioBusqueda<T> implements TDAArbolBinario<T> {
 
     // =========================================================
     // ATRIBUTOS
@@ -19,11 +19,11 @@ public class ABB<T> implements TDAArbolBinario<T> {
     // CONSTRUCTORES
     // =========================================================
 
-    public ABB() {
+    public ArbolBinarioBusqueda() {
         this.raiz = null;
     }
 
-    public ABB(TDAElemento<T> raiz) {
+    public ArbolBinarioBusqueda(TDAElemento<T> raiz) {
         this.raiz = raiz;
     }
 
