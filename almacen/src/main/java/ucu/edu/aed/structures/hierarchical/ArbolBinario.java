@@ -19,6 +19,10 @@ public class ArbolBinario<T> implements TDAArbolBinario<T> {
         this.raiz = raiz;
     }
 
+    protected void establecerRaiz(TDAElemento<T> nuevaRaiz) {
+        this.raiz = nuevaRaiz;
+    }
+
     @Override
     public T buscar(Comparable<T> criterioBusqueda) {
         if (criterioBusqueda == null) {
@@ -134,7 +138,7 @@ public class ArbolBinario<T> implements TDAArbolBinario<T> {
     }
 
     @SuppressWarnings("unchecked")
-    private T convertirADato(Comparable<T> dato) {
+    protected T convertirADato(Comparable<T> dato) {
         return (T) dato;
     }
 
@@ -235,7 +239,7 @@ public class ArbolBinario<T> implements TDAArbolBinario<T> {
     }
 
     // yo se que no hace falta pero (me) ayuda a la lectura
-    private boolean raizEsNula() {
+    protected boolean raizEsNula() {
         return this.raiz == null;
     }
 
