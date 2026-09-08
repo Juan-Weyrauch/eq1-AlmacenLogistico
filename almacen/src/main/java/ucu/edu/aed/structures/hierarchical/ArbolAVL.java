@@ -4,21 +4,21 @@ import ucu.edu.aed.structures.element.NodoAVL;
 import ucu.edu.aed.tda.element.TDAElemento;
 import ucu.edu.aed.tda.hierarchical.TDAArbolBinario;
 
-public class ArbolAVL<T> extends ArbolBinario<T> implements TDAArbolBinario<T> {
+public class ArbolAVL<T> extends ArbolBinarioBusqueda<T> implements TDAArbolBinario<T> {
 
     @Override
     public boolean insertar(Comparable<T> dato) {
         if (dato == null) return false;
 
-        if (esVacio()) {
-            raiz = new NodoAVL<>(convertirADato(dato));
+        if (raizEsNula()) {
+            establecerRaiz(new NodoAVL<>(convertirADato(dato)));
             return true;
         }
 
         boolean[] insertado = {false};
 
-        TDAElemento<T> nuevaRaiz = ((NodoAVL<T>) raiz).insertar(dato, insertado);
-        raiz = nuevaRaiz;
+        TDAElemento<T> nuevaRaiz = ((NodoAVL<T>) obtenerRaiz()).insertar(dato, insertado);
+        establecerRaiz(nuevaRaiz);
 
         return insertado[0];
     }
@@ -27,18 +27,13 @@ public class ArbolAVL<T> extends ArbolBinario<T> implements TDAArbolBinario<T> {
     public boolean eliminar(Comparable<T> criterioBusqueda) {
         if (criterioBusqueda == null) return false;
 
-        if (esVacio()) return false;
+        if (raizEsNula()) return false;
 
         boolean[] eliminado = {false};
 
-        TDAElemento<T> nuevaRaiz = ((NodoAVL<T>) raiz).eliminar(criterioBusqueda, eliminado);
-        raiz = nuevaRaiz;
+        TDAElemento<T> nuevaRaiz = ((NodoAVL<T>) obtenerRaiz()).eliminar(criterioBusqueda, eliminado);
+        establecerRaiz(nuevaRaiz);
 
         return eliminado[0];
-    }
-
-    @SuppressWarnings("unchecked")
-    private T convertirADato(Comparable<T> dato) {
-        return (T) dato;
     }
 }

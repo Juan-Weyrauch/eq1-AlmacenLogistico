@@ -83,7 +83,7 @@ class AVLArbolTest {
     }
 
     @Test
-    void inOrderDevuelveElementosOrdenadosLuegoDeVariasInserciones() {
+    void inOrderDevuelveElementosOrdenados() {
         int[] valores = {50, 30, 70, 20, 40, 60, 80, 10, 25, 35, 45};
         for (int v : valores) {
             arbol.insertar(v);
