@@ -1,4 +1,4 @@
-package org.example;
+package ucu.edu.aed.structures.linear;
 
 import org.junit.jupiter.api.Test;
 import ucu.edu.aed.structures.linear.Pila;
