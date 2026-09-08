@@ -8,7 +8,7 @@ import ucu.edu.aed.tda.hierarchical.TDAArbolBinario;
 
 public class ArbolBinario<T> implements TDAArbolBinario<T> {
 
-    private TDAElemento<T> raiz;
+    protected TDAElemento<T> raiz;
 
     public ArbolBinario() {
         this.raiz = null;

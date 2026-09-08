@@ -44,7 +44,7 @@ public class Inventario {
                     "Ya existe un producto registrado con el codigo indicado");
         }
 
-        this.items.agregar(new ItemInventario(producto, stockInicial));
+        this.items.insertar(new ItemInventario(producto, stockInicial));
     }
 
     /**
@@ -136,7 +136,7 @@ public class Inventario {
 
     public ListaArray<ItemInventario> getItems() {
         ListaArray<ItemInventario> copia = new ListaArray<>();
-        this.items.inOrden(item -> copia.agregar(new ItemInventario(item.getProducto(), item.getStock())));
+        this.items.inOrder(item -> copia.agregar(new ItemInventario(item.getProducto(), item.getStock())));
         return copia;
     }
 
