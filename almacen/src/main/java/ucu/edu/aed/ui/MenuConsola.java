@@ -4,11 +4,15 @@ import ucu.edu.aed.model.EntregaProveedor;
 import ucu.edu.aed.model.EstadoTerminal;
 import ucu.edu.aed.model.ItemInventario;
 import ucu.edu.aed.model.LineaProducto;
+import ucu.edu.aed.model.PasoPicking;
 import ucu.edu.aed.model.PedidoReabastecimiento;
 import ucu.edu.aed.model.Producto;
 import ucu.edu.aed.model.Proveedor;
+import ucu.edu.aed.model.Sector;
 import ucu.edu.aed.model.Sucursal;
 import ucu.edu.aed.model.TerminalCarga;
+import ucu.edu.aed.model.TipoSector;
+import ucu.edu.aed.model.UbicacionStock;
 import ucu.edu.aed.service.AlmacenLogistico;
 import ucu.edu.aed.structures.linear.ListaArray;
 import ucu.edu.aed.structures.linear.ListaSimple;
@@ -87,6 +91,9 @@ public class MenuConsola {
                     case 10:
                         gestionarTerminales();
                         break;
+                    case 11:
+                        ejecutarFuncionesHito2();
+                        break;
                     case 0:
                         continuar = false;
                         System.out.println("Sistema finalizado.");
@@ -117,6 +124,7 @@ public class MenuConsola {
         System.out.println("8. Consultas");
         System.out.println("9. Mostrar estado general del almacen");
         System.out.println("10. Gestionar terminales");
+        System.out.println("11. Funciones Hito 2");
         System.out.println("0. Salir");
         System.out.println("----------------------------------------");
     }
@@ -440,6 +448,407 @@ public class MenuConsola {
                 break;
             default:
                 System.out.println("Opcion invalida.");
+        }
+    }
+
+    // =========================================================
+    // La interfaz solamente lee datos, llama a AlmacenLogistico
+    // y muestra resultados.
+    // =========================================================
+
+    /**
+     * Ejecuta las opciones nuevas necesarias para demostrar el Hito 2.
+     * <p>Se agrega como un submenu independiente para conservar intactas las
+     * opciones y los métodos existentes del Hito 1.</p>
+     */
+    private void ejecutarFuncionesHito2() {
+        boolean volver = false;
+
+        while (!volver) {
+            System.out.println("\n--- Funciones Hito 2 ---");
+            System.out.println("1. Registrar producto para Hito 2");
+            System.out.println("2. Buscar producto por codigo");
+            System.out.println("3. Listar inventario ordenado");
+            System.out.println("4. Mostrar ubicaciones de un producto");
+            System.out.println("5. Modificar prioridad de pedido pendiente");
+            System.out.println("6. Mostrar picking del proximo pedido");
+            System.out.println("7. Despachar proximo pedido y mostrar picking");
+            System.out.println("8. Crear sector");
+            System.out.println("9. Mover sector");
+            System.out.println("10. Inhabilitar sector y reubicar mercaderia");
+            System.out.println("11. Consultar ocupacion y espacio de sector");
+            System.out.println("12. Mostrar mercaderia de un sector");
+            System.out.println("0. Volver");
+
+            int opcion = leerEntero("Seleccione una opcion: ");
+
+            switch (opcion) {
+                case 1:
+                    registrarProductoHito2();
+                    break;
+                case 2:
+                    buscarProductoHito2();
+                    break;
+                case 3:
+                    mostrarInventarioOrdenadoHito2();
+                    break;
+                case 4:
+                    mostrarUbicacionesProductoHito2();
+                    break;
+                case 5:
+                    modificarPrioridadPedidoHito2();
+                    break;
+                case 6:
+                    mostrarPickingProximoPedidoHito2();
+                    break;
+                case 7:
+                    despacharPedidoReabastecimientoHito2();
+                    break;
+                case 8:
+                    crearSectorHito2();
+                    break;
+                case 9:
+                    moverSectorHito2();
+                    break;
+                case 10:
+                    inhabilitarSectorHito2();
+                    break;
+                case 11:
+                    consultarOcupacionSectorHito2();
+                    break;
+                case 12:
+                    mostrarMercaderiaSectorHito2();
+                    break;
+                case 0:
+                    volver = true;
+                    break;
+                default:
+                    System.out.println("Opcion invalida.");
+            }
+        }
+    }
+
+    /**
+     * Registra un producto utilizando el modelo físico del Hito 2.
+     *
+     * <p>El producto se registra con stock inicial cero. Las unidades reales
+     * ingresan posteriormente mediante una entrega y quedan asociadas a
+     * posiciones físicas.</p>
+     *
+     * <p>El constructor de Producto con espacioUnitario pertenece a la parte
+     * del Estudiante 4. MenuConsola solamente lo utiliza.</p>
+     */
+    private void registrarProductoHito2() {
+        System.out.println("\n--- Registrar producto Hito 2 ---");
+
+        String codigo = leerTextoNoVacio("Codigo: ");
+        String nombre = leerTextoNoVacio("Nombre: ");
+        System.out.print("Descripcion: ");
+        String descripcion = this.scanner.nextLine().trim();
+        int espacioUnitario = leerEnteroPositivo("Espacio unitario en UC: ");
+
+        Producto producto = new Producto(
+                codigo,
+                nombre,
+                descripcion,
+                espacioUnitario);
+
+        this.almacen.registrarProducto(producto, 0);
+
+        System.out.println("Producto registrado con stock inicial 0.");
+    }
+
+    /**
+     * Busca un producto por código utilizando la consulta integrada del
+     * Hito 2.
+     */
+    private void buscarProductoHito2() {
+        String codigo = leerTextoNoVacio("Codigo: ");
+        ItemInventario item = this.almacen.buscarProducto(codigo);
+
+        if (item == null) {
+            System.out.println("Producto no encontrado.");
+            return;
+        }
+
+        System.out.println(
+                item.getProducto().getCodigo()
+                        + " | "
+                        + item.getProducto().getNombre()
+                        + " | stock: "
+                        + item.getStock());
+    }
+
+    /**
+     * Muestra el inventario en el orden proporcionado por el inOrder del AVL.
+     * El recorrido se resuelve fuera de MenuConsola.
+     */
+    private void mostrarInventarioOrdenadoHito2() {
+        ListaArray<ItemInventario> items =
+                this.almacen.listarInventarioOrdenado();
+
+        if (items.esVacio()) {
+            System.out.println("Inventario vacio.");
+            return;
+        }
+
+        for (int i = 0; i < items.tamaño(); i++) {
+            ItemInventario item = items.obtener(i);
+            System.out.println(
+                    item.getProducto().getCodigo()
+                            + " | "
+                            + item.getProducto().getNombre()
+                            + " | stock: "
+                            + item.getStock());
+        }
+    }
+
+    /**
+     * Muestra las posiciones físicas en las que se encuentra un producto.
+     */
+    private void mostrarUbicacionesProductoHito2() {
+        String codigo = leerTextoNoVacio("Codigo: ");
+
+        ListaSimple<UbicacionStock> ubicaciones =
+                this.almacen.ubicacionesDeProducto(codigo);
+
+        if (ubicaciones.esVacio()) {
+            System.out.println(
+                    "El producto no posee ubicaciones registradas.");
+            return;
+        }
+
+        for (int i = 0; i < ubicaciones.tamaño(); i++) {
+            UbicacionStock ubicacion = ubicaciones.obtener(i);
+
+            System.out.println(
+                    this.almacen.obtenerRutaSector(
+                            ubicacion.getPosicion())
+                            + " -> "
+                            + ubicacion.getCantidad()
+                            + " unidades");
+        }
+    }
+
+    /**
+     * Cambia la prioridad de un pedido pendiente.
+     *
+     * La UI solamente solicita el cambio a
+     * AlmacenLogistico.</p>
+     */
+    private void modificarPrioridadPedidoHito2() {
+        String idPedido = leerTextoNoVacio("ID del pedido: ");
+        int nuevaPrioridad = leerEnteroNoNegativo("Nueva prioridad: ");
+
+        this.almacen.modificarPrioridadPedido(
+                idPedido,
+                nuevaPrioridad);
+
+        System.out.println("Prioridad modificada correctamente.");
+    }
+
+    /**
+     * Muestra el plan de picking del próximo pedido sin modificar el stock.
+     */
+    private void mostrarPickingProximoPedidoHito2() {
+        ListaArray<PasoPicking> pasos =
+                this.almacen.generarRecorridoPickingProximoPedido();
+
+        if (pasos == null) {
+            System.out.println(
+                    "El pedido de mayor prioridad no puede completarse.");
+            return;
+        }
+
+        if (pasos.esVacio()) {
+            System.out.println("No hay pedidos pendientes.");
+            return;
+        }
+
+        mostrarPasosPickingHito2(pasos);
+    }
+
+    /**
+     * Despacha utilizando el flujo ubicado del Hito 2 y muestra el picking
+     * que fue aplicado.
+     */
+    private void despacharPedidoReabastecimientoHito2() {
+        if (this.almacen.cantidadPedidosPendientes() == 0) {
+            System.out.println("No hay pedidos pendientes.");
+            return;
+        }
+
+        if (this.almacen.buscarTerminalLibre() == null) {
+            System.out.println("No hay terminales libres disponibles.");
+            return;
+        }
+
+        TerminalCarga terminal =
+                this.almacen.despacharProximoPedido();
+
+        if (terminal == null) {
+            System.out.println(
+                    "El pedido no puede completarse con el stock ubicado. "
+                            + "Permanece pendiente.");
+            return;
+        }
+
+        System.out.println(
+                "Pedido "
+                        + terminal.getOperacionActual().getId()
+                        + " asignado a la terminal "
+                        + terminal.getNumero()
+                        + ".");
+
+        System.out.println("Recorrido de picking aplicado:");
+        mostrarPasosPickingHito2(
+                this.almacen.getUltimoRecorridoPicking());
+    }
+
+    /**
+     * Crea un sector físico dentro del depósito.
+     *
+     * <p>Sector, capacidad y el movimiento dentro del árbol general pertenecen
+     * al Estudiante 4. La UI solamente recoge los datos.</p>
+     */
+    private void crearSectorHito2() {
+        String rutaPadre = leerTextoNoVacio("Ruta del sector padre: ");
+        String codigo = leerTextoNoVacio("Codigo local: ");
+        String nombre = leerTextoNoVacio("Nombre: ");
+        TipoSector tipo = leerTipoSectorHito2();
+        int capacidad = leerEnteroNoNegativo("Capacidad en UC: ");
+
+        Sector sector = new Sector(
+                codigo,
+                nombre,
+                tipo,
+                capacidad);
+
+        this.almacen.agregarSector(
+                rutaPadre,
+                sector);
+
+        System.out.println("Sector agregado correctamente.");
+    }
+
+    /**
+     * Solicita el movimiento de un sector completo.
+     */
+    private void moverSectorHito2() {
+        String rutaOrigen = leerTextoNoVacio("Ruta de origen: ");
+        String rutaDestino = leerTextoNoVacio("Ruta del nuevo padre: ");
+
+        this.almacen.moverSector(
+                rutaOrigen,
+                rutaDestino);
+
+        System.out.println("Sector movido correctamente.");
+    }
+
+    /**
+     * Solicita la inhabilitación de un sector. La planificación y la
+     * reubicación de la mercadería pertenecen a AlmacenLogistico.
+     */
+    private void inhabilitarSectorHito2() {
+        String ruta = leerTextoNoVacio("Ruta del sector: ");
+
+        this.almacen.inhabilitarSector(ruta);
+
+        System.out.println(
+                "Mercaderia reubicada y sector inhabilitado.");
+    }
+
+    /**
+     * Consulta ocupación y capacidad disponible de un sector.
+     */
+    private void consultarOcupacionSectorHito2() {
+        String ruta = leerTextoNoVacio("Ruta del sector: ");
+
+        System.out.println(
+                "Ocupacion: "
+                        + this.almacen.obtenerOcupacionSector(ruta)
+                        + " UC");
+
+        System.out.println(
+                "Disponible: "
+                        + this.almacen.obtenerEspacioDisponibleSector(ruta)
+                        + " UC");
+    }
+
+    /**
+     * Muestra la mercadería contenida en un sector o en sus descendientes.
+     */
+    private void mostrarMercaderiaSectorHito2() {
+        String ruta = leerTextoNoVacio("Ruta del sector: ");
+
+        ListaSimple<UbicacionStock> contenido =
+                this.almacen.obtenerMercaderiaSector(ruta);
+
+        if (contenido.esVacio()) {
+            System.out.println("El sector no contiene mercaderia.");
+            return;
+        }
+
+        for (int i = 0; i < contenido.tamaño(); i++) {
+            UbicacionStock ubicacion = contenido.obtener(i);
+
+            System.out.println(
+                    this.almacen.obtenerRutaSector(
+                            ubicacion.getPosicion())
+                            + " | "
+                            + ubicacion.getProducto().getCodigo()
+                            + " | "
+                            + ubicacion.getCantidad()
+                            + " unidades");
+        }
+    }
+
+    /**
+     * Muestra una secuencia de pasos de picking ya calculada por
+     * AlmacenLogistico.
+     */
+    private void mostrarPasosPickingHito2(
+            ListaArray<PasoPicking> pasos) {
+
+        for (int i = 0; i < pasos.tamaño(); i++) {
+            PasoPicking paso = pasos.obtener(i);
+
+            System.out.println(
+                    paso.getRutaPosicion()
+                            + " -> "
+                            + paso.getProducto().getCodigo()
+                            + " -> "
+                            + paso.getCantidad());
+        }
+    }
+
+    /**
+     * Lee uno de los tipos de sector definidos por el modelo físico.
+     */
+    private TipoSector leerTipoSectorHito2() {
+        while (true) {
+            System.out.println("1. ZONA");
+            System.out.println("2. PASILLO");
+            System.out.println("3. ESTANTERIA");
+            System.out.println("4. BANDEJA");
+            System.out.println("5. POSICION");
+
+            int opcion = leerEntero("Tipo: ");
+
+            switch (opcion) {
+                case 1:
+                    return TipoSector.ZONA;
+                case 2:
+                    return TipoSector.PASILLO;
+                case 3:
+                    return TipoSector.ESTANTERIA;
+                case 4:
+                    return TipoSector.BANDEJA;
+                case 5:
+                    return TipoSector.POSICION;
+                default:
+                    System.out.println("Tipo invalido.");
+            }
         }
     }
 
