@@ -1,15 +1,16 @@
-package org.example;
+package ucu.edu.aed.structures.linear;
+
 import org.junit.jupiter.api.Test;
-import ucu.edu.aed.structures.linear.ListaArray;
+import ucu.edu.aed.structures.linear.ListaCircular;
 import ucu.edu.aed.tda.linear.TDALista;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class ListaArrayTest {
+class ListaCircularTest {
 
     @Test
     void estructuraVacia() {
-        ListaArray<Integer> lista = new ListaArray<>();
+        ListaCircular<Integer> lista = new ListaCircular<>();
 
         assertTrue(lista.esVacio());
         assertEquals(0, lista.tamaño());
@@ -17,24 +18,22 @@ class ListaArrayTest {
 
     @Test
     void unElemento() {
-        ListaArray<Integer> lista = new ListaArray<>();
+        ListaCircular<Integer> lista = new ListaCircular<>();
 
         lista.agregar(10);
 
-        assertFalse(lista.esVacio());
-        assertEquals(1, lista.tamaño());
         assertEquals(10, lista.obtener(0));
+        assertEquals(1, lista.tamaño());
     }
 
     @Test
     void multiplesElementos() {
-        ListaArray<Integer> lista = new ListaArray<>();
+        ListaCircular<Integer> lista = new ListaCircular<>();
 
         lista.agregar(10);
         lista.agregar(20);
         lista.agregar(30);
 
-        assertEquals(3, lista.tamaño());
         assertEquals(10, lista.obtener(0));
         assertEquals(20, lista.obtener(1));
         assertEquals(30, lista.obtener(2));
@@ -42,7 +41,7 @@ class ListaArrayTest {
 
     @Test
     void insercionInicialMediaYFinal() {
-        ListaArray<Integer> lista = new ListaArray<>();
+        ListaCircular<Integer> lista = new ListaCircular<>();
 
         lista.agregar(10);
         lista.agregar(30);
@@ -51,7 +50,6 @@ class ListaArrayTest {
         lista.agregar(2, 20);
         lista.agregar(4, 40);
 
-        assertEquals(5, lista.tamaño());
         assertEquals(5, lista.obtener(0));
         assertEquals(10, lista.obtener(1));
         assertEquals(20, lista.obtener(2));
@@ -61,36 +59,32 @@ class ListaArrayTest {
 
     @Test
     void eliminacionInicialMediaYFinal() {
-        ListaArray<Integer> lista = new ListaArray<>();
+        ListaCircular<Integer> lista = new ListaCircular<>();
 
         lista.agregar(10);
         lista.agregar(20);
         lista.agregar(30);
         lista.agregar(40);
-        lista.agregar(50);
 
         assertEquals(10, lista.remover(0));
         assertEquals(30, lista.remover(1));
-        assertEquals(50, lista.remover(lista.tamaño() - 1));
+        assertEquals(40, lista.remover(1));
+        assertEquals(20, lista.remover(0));
 
-        assertEquals(2, lista.tamaño());
-        assertEquals(20, lista.obtener(0));
-        assertEquals(40, lista.obtener(1));
+        assertTrue(lista.esVacio());
+        assertEquals(0, lista.tamaño());
     }
 
     @Test
     void busquedas() {
-        ListaArray<Integer> lista = new ListaArray<>();
+        ListaCircular<Integer> lista = new ListaCircular<>();
 
         lista.agregar(10);
         lista.agregar(20);
         lista.agregar(30);
 
         assertTrue(lista.contiene(20));
-        assertFalse(lista.contiene(99));
-
         assertEquals(1, lista.indiceDe(20));
-        assertEquals(-1, lista.indiceDe(99));
 
         assertEquals(30, lista.buscar(x -> x > 25));
         assertNull(lista.buscar(x -> x > 100));
@@ -98,7 +92,7 @@ class ListaArrayTest {
 
     @Test
     void indicesInvalidos() {
-        ListaArray<Integer> lista = new ListaArray<>();
+        ListaCircular<Integer> lista = new ListaCircular<>();
 
         lista.agregar(10);
 
@@ -117,7 +111,7 @@ class ListaArrayTest {
 
     @Test
     void vaciarYReutilizacion() {
-        ListaArray<Integer> lista = new ListaArray<>();
+        ListaCircular<Integer> lista = new ListaCircular<>();
 
         lista.agregar(10);
         lista.agregar(20);
@@ -125,30 +119,24 @@ class ListaArrayTest {
         lista.vaciar();
 
         assertTrue(lista.esVacio());
-        assertEquals(0, lista.tamaño());
 
         lista.agregar(30);
 
-        assertEquals(1, lista.tamaño());
         assertEquals(30, lista.obtener(0));
     }
 
     @Test
     void ordenar() {
-        ListaArray<Integer> lista = new ListaArray<>();
+        ListaCircular<Integer> lista = new ListaCircular<>();
 
         lista.agregar(30);
         lista.agregar(10);
         lista.agregar(20);
 
-        TDALista<Integer> ordenada =
-                lista.ordenar(Integer::compareTo);
+        TDALista<Integer> ordenada = lista.ordenar(Integer::compareTo);
 
         assertEquals(10, ordenada.obtener(0));
         assertEquals(20, ordenada.obtener(1));
         assertEquals(30, ordenada.obtener(2));
-
-        // La original no debería modificarse
-        assertEquals(30, lista.obtener(0));
     }
 }

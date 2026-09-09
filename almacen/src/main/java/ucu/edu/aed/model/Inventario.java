@@ -129,14 +129,15 @@ public class Inventario {
     /**
      * Obtiene los items almacenados en el inventario.
      *
-     * <p>Complejidad temporal: O(n), porque tiene que recorrer todos los nodos.</p>
+     * <p>Recorrido AVL O(n), mas la copia de las ubicaciones de cada item.
+     * Con acceso por indice sobre ListaSimple, las copias cuestan O(sum(u_i^2)).</p>
      *
      * @return lista de items del inventario
      */
 
     public ListaArray<ItemInventario> getItems() {
         ListaArray<ItemInventario> copia = new ListaArray<>();
-        this.items.inOrder(item -> copia.agregar(new ItemInventario(item.getProducto(), item.getStock())));
+        this.items.inOrder(item -> copia.agregar(item.copiar()));
         return copia;
     }
 

@@ -478,6 +478,7 @@ public class MenuConsola {
             System.out.println("10. Inhabilitar sector y reubicar mercaderia");
             System.out.println("11. Consultar ocupacion y espacio de sector");
             System.out.println("12. Mostrar mercaderia de un sector");
+            System.out.println("13. Mostrar deposito por niveles");
             System.out.println("0. Volver");
 
             int opcion = leerEntero("Seleccione una opcion: ");
@@ -518,6 +519,9 @@ public class MenuConsola {
                     break;
                 case 12:
                     mostrarMercaderiaSectorHito2();
+                    break;
+                case 13:
+                    mostrarDepositoPorNiveles();
                     break;
                 case 0:
                     volver = true;
@@ -711,8 +715,22 @@ public class MenuConsola {
      * <p>Sector, capacidad y el movimiento dentro del árbol general pertenecen
      * al Estudiante 4. La UI solamente recoge los datos.</p>
      */
+    private String leerRutaSector(String mensaje) {
+        System.out.print(mensaje);
+        return this.scanner.nextLine().trim();
+    }
+
+    private void mostrarDepositoPorNiveles() {
+        ListaArray<Sector> sectores = this.almacen.listarSectoresPorNiveles();
+        for (int i = 0; i < sectores.tamaño(); i++) {
+            Sector sector = sectores.obtener(i);
+            String ruta = this.almacen.obtenerRutaSector(sector);
+            System.out.println((ruta.isEmpty() ? "(raiz)" : ruta) + " | " + sector);
+        }
+    }
+
     private void crearSectorHito2() {
-        String rutaPadre = leerTextoNoVacio("Ruta del sector padre: ");
+        String rutaPadre = leerRutaSector("Ruta del sector padre (Enter = raiz): ");
         String codigo = leerTextoNoVacio("Codigo local: ");
         String nombre = leerTextoNoVacio("Nombre: ");
         TipoSector tipo = leerTipoSectorHito2();
@@ -736,7 +754,7 @@ public class MenuConsola {
      */
     private void moverSectorHito2() {
         String rutaOrigen = leerTextoNoVacio("Ruta de origen: ");
-        String rutaDestino = leerTextoNoVacio("Ruta del nuevo padre: ");
+        String rutaDestino = leerRutaSector("Ruta del nuevo padre (Enter = raiz): ");
 
         this.almacen.moverSector(
                 rutaOrigen,
@@ -762,7 +780,7 @@ public class MenuConsola {
      * Consulta ocupación y capacidad disponible de un sector.
      */
     private void consultarOcupacionSectorHito2() {
-        String ruta = leerTextoNoVacio("Ruta del sector: ");
+        String ruta = leerRutaSector("Ruta del sector (Enter = raiz): ");
 
         System.out.println(
                 "Ocupacion: "
@@ -779,7 +797,7 @@ public class MenuConsola {
      * Muestra la mercadería contenida en un sector o en sus descendientes.
      */
     private void mostrarMercaderiaSectorHito2() {
-        String ruta = leerTextoNoVacio("Ruta del sector: ");
+        String ruta = leerRutaSector("Ruta del sector (Enter = raiz): ");
 
         ListaSimple<UbicacionStock> contenido =
                 this.almacen.obtenerMercaderiaSector(ruta);

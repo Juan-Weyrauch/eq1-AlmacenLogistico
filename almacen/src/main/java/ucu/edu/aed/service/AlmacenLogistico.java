@@ -58,7 +58,21 @@ public class AlmacenLogistico {
     }
 
     public void registrarProducto(Producto producto, int stockInicial) {
-        inventario.registrarProducto(producto, stockInicial);
+        if (producto == null || stockInicial < 0) {
+            throw new IllegalArgumentException("Producto nulo o stock inicial negativo");
+        }
+        if (inventario.buscarItem(producto.getCodigo()) != null) {
+            throw new IllegalArgumentException("El producto ya esta registrado");
+        }
+        // Validar todo antes del alta: nunca queda un producto registrado a medias.
+        ListaArray<AsignacionPlanificada> plan = new ListaArray<>();
+        if (!planificarIngreso(producto, stockInicial, plan,
+                new ListaArray<>(), obtenerPosicionesHabilitadasEnPreOrden())) {
+            throw new IllegalStateException("No hay capacidad para ubicar el stock inicial");
+        }
+        inventario.registrarProducto(producto, 0);
+        inventario.buscarItem(producto.getCodigo()).activarStockUbicado();
+        aplicarPlanDescarga(plan);
     }
 
     public void registrarLlegadaProveedor(EntregaProveedor entrega) {
@@ -329,13 +343,8 @@ public class AlmacenLogistico {
     }
 
     public PedidoReabastecimiento buscarPedidoPendientePorSucursal(String sucursalId) {
-        for (int i = 0; i < pedidosPendientes.tamaño(); i++) {
-            PedidoReabastecimiento pedido = pedidosPendientes.obtener(i);
-            if (pedido.getSucursal().getId().equals(sucursalId)) {
-                return pedido;
-            }
-        }
-        return null;
+        return pedidosPendientes.buscar(
+                pedido -> pedido.getSucursal().getId().equals(sucursalId));
     }
 
     // =========================================================
@@ -494,51 +503,34 @@ public class AlmacenLogistico {
 
             validarItemUbicadoParaHito2(item);
 
-            int restante = linea.getCantidad();
+            // La identidad es el codigo; las dimensiones son las del catalogo.
+            producto = item.getProducto();
 
-            for (int j = 0;
-                 j < posiciones.tamaño() && restante > 0;
-                 j++) {
-
-                Sector posicion = posiciones.obtener(j);
-
-                int disponibles =
-                        calcularUnidadesDisponiblesPlanificadas(
-                                posicion,
-                                producto,
-                                ajustes);
-
-                if (disponibles <= 0) {
-                    continue;
-                }
-
-                int asignar = menor(restante, disponibles);
-
-                plan.agregar(
-                        new AsignacionPlanificada(
-                                producto,
-                                posicion,
-                                asignar));
-
-                registrarAjusteEnCamino(
-                        posicion,
-                        asignar * producto.getEspacioUnitario(),
-                        ajustes);
-
-                restante -= asignar;
-            }
-
-            /*
-             * Si una sola línea queda incompleta, se descarta todo el plan.
-             * Como todavía no se modificó el estado, no hay una descarga
-             * parcial.
-             */
-            if (restante > 0) {
+            if (!planificarIngreso(producto, linea.getCantidad(), plan, ajustes, posiciones)) {
                 return null;
             }
         }
 
         return plan;
+    }
+
+    /** Comparte la reserva virtual de capacidad entre el alta y la descarga. */
+    private boolean planificarIngreso(Producto producto, int cantidad,
+            ListaArray<AsignacionPlanificada> plan, ListaArray<AjusteCapacidad> ajustes,
+            ListaArray<Sector> posiciones) {
+        int restante = cantidad;
+        for (int i = 0; i < posiciones.tamaño() && restante > 0; i++) {
+            Sector posicion = posiciones.obtener(i);
+            int disponibles = calcularUnidadesDisponiblesPlanificadas(posicion, producto, ajustes);
+            int asignar = Math.min(restante, disponibles);
+            if (asignar > 0) {
+                plan.agregar(new AsignacionPlanificada(producto, posicion, asignar));
+                registrarAjusteEnCamino(posicion,
+                        Math.multiplyExact(asignar, producto.getEspacioUnitario()), ajustes);
+                restante -= asignar;
+            }
+        }
+        return restante == 0;
     }
 
     /**

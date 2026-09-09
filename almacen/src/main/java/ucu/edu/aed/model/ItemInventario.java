@@ -8,7 +8,8 @@ import ucu.edu.aed.structures.linear.ListaSimple;
  * <p>Invariante: el producto asociado no es {@code null} y el stock siempre
  * es mayor o igual a cero.</p>
  *
- * <p>Complejidad: todas las operaciones de esta clase son O(1).</p>
+ * <p>Acceso al stock O(1); busqueda de ubicacion O(u). Las copias por indice
+ * sobre ListaSimple cuestan O(u^2), con u ubicaciones.</p>
  */
 public class ItemInventario implements Comparable<ItemInventario>{
 
@@ -17,6 +18,7 @@ public class ItemInventario implements Comparable<ItemInventario>{
 
     /** Cantidad disponible del producto. */
     private int stock;
+    private boolean stockUbicado;
 
     /*
      *
@@ -70,6 +72,7 @@ public class ItemInventario implements Comparable<ItemInventario>{
      * @param cantidad cantidad a agregar
      */
     public void aumentarStock(int cantidad) {
+        exigirStockSinUbicaciones();
         validarCantidadNoNegativa(cantidad, "La cantidad a agregar no puede ser negativa");
         this.stock += cantidad;
     }
@@ -80,6 +83,7 @@ public class ItemInventario implements Comparable<ItemInventario>{
      * @param cantidad cantidad a retirar
      */
     public void disminuirStock(int cantidad) {
+        exigirStockSinUbicaciones();
         validarCantidadNoNegativa(cantidad, "La cantidad a retirar no puede ser negativa");
 
         if (cantidad > this.stock) {
@@ -108,6 +112,7 @@ public class ItemInventario implements Comparable<ItemInventario>{
      */
     public UbicacionStock agregarUbicacion(UbicacionStock ubicacion) {
         validarUbicacion(ubicacion);
+        activarStockUbicado();
 
         if (buscarUbicacion(ubicacion.getPosicion()) != null) {
             throw new IllegalArgumentException(
@@ -139,6 +144,7 @@ public class ItemInventario implements Comparable<ItemInventario>{
         validarCantidadPositiva(
                 cantidad,
                 "La cantidad a agregar debe ser mayor que cero");
+        activarStockUbicado();
 
         UbicacionStock ubicacion = buscarUbicacion(posicion);
 
@@ -306,6 +312,34 @@ public class ItemInventario implements Comparable<ItemInventario>{
         if (producto == null) {
             throw new IllegalArgumentException("El producto no puede ser null");
         }
+    }
+
+    /** Activa el modelo fisico sin inventar ubicaciones para cantidades previas. */
+    public void activarStockUbicado() {
+        if (!stockUbicado && stock != 0) {
+            throw new IllegalStateException("Debe migrar el stock existente antes de ubicarlo");
+        }
+        stockUbicado = true;
+    }
+
+    private void exigirStockSinUbicaciones() {
+        if (stockUbicado) {
+            throw new IllegalStateException("El stock ubicado debe modificarse por posicion");
+        }
+    }
+
+    /** Copia independiente para consultas; conserva las cantidades por posicion. */
+    public ItemInventario copiar() {
+        ItemInventario copia = new ItemInventario(producto, stockUbicado ? 0 : stock);
+        if (stockUbicado) {
+            copia.activarStockUbicado();
+            for (int i = 0; i < ubicaciones.tamaño(); i++) {
+                UbicacionStock ubicacion = ubicaciones.obtener(i);
+                copia.agregarUbicacion(new UbicacionStock(producto,
+                        ubicacion.getPosicion(), ubicacion.getCantidad()));
+            }
+        }
+        return copia;
     }
 
     private void validarUbicacion(UbicacionStock ubicacion) {
