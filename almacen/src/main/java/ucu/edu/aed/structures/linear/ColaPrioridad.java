@@ -2,19 +2,42 @@ package ucu.edu.aed.structures.linear;
 
 import java.util.Comparator;
 import java.util.NoSuchElementException;
+import java.util.function.Predicate;
 
 import ucu.edu.aed.tda.linear.TDAColaPrioridad;
 
-public class ColaPrioridad<T> extends ListaSimple<T> implements TDAColaPrioridad<T> {
+/**
+ * Cola de prioridad basada en un heap máximo genérico (Heap<Entrada<T>>).
+ */
+public class ColaPrioridad<T> implements TDAColaPrioridad<T> {
 
-    private final Comparator<T> comparator;
+    private static final class Entrada<T> {
+        private final T dato;
+        private final long secuencia;
+
+        private Entrada(T dato, long secuencia) {
+            this.dato = dato;
+            this.secuencia = secuencia;
+        }
+    }
+
+    private final Heap<Entrada<T>> monticulo;
+    private long contadorSecuencia;
 
     public ColaPrioridad(Comparator<T> comparator) {
-        super();
         if (comparator == null) {
             throw new IllegalArgumentException("Comparator cannot be null");
         }
-        this.comparator = comparator;
+        Comparator<Entrada<T>> comparadorInterno = (a, b) -> {
+            int resultado = comparator.compare(a.dato, b.dato);
+            if (resultado != 0) {
+                return resultado;
+            }
+            // Misma prioridad, se queda el mas antiguo
+            return Long.compare(b.secuencia, a.secuencia);
+        };
+        this.monticulo = new Heap<>(comparadorInterno);
+        this.contadorSecuencia = 0L;
     }
 
     @Override
@@ -22,31 +45,14 @@ public class ColaPrioridad<T> extends ListaSimple<T> implements TDAColaPrioridad
         if (esVacio()) {
             throw new NoSuchElementException("La cola de prioridad está vacía");
         }
-        return this.head.data;
+        return monticulo.frente().dato;
     }
 
     @Override
     public boolean poneEnCola(T dato) {
         checkElementNull(dato);
-
-        Node<T> nuevo = new Node<>(dato);
-
-        if (this.head == null || this.comparator.compare(dato, this.head.data) > 0) {
-            nuevo.next = this.head;
-            this.head = nuevo;
-            this.size++;
-            return true;
-        }
-
-        Node<T> actual = this.head;
-        while (actual.next != null && this.comparator.compare(dato, actual.next.data) <= 0) {
-            actual = actual.next;
-        }
-
-        nuevo.next = actual.next;
-        actual.next = nuevo;
-        this.size++;
-
+        monticulo.poneEnCola(new Entrada<>(dato, contadorSecuencia));
+        contadorSecuencia++;
         return true;
     }
 
@@ -55,31 +61,50 @@ public class ColaPrioridad<T> extends ListaSimple<T> implements TDAColaPrioridad
         if (esVacio()) {
             throw new NoSuchElementException("La cola de prioridad está vacía");
         }
-        return super.remover(0);
+        return monticulo.quitaDeCola().dato;
     }
 
-    @Override
-    public void agregar(T elem) {
-        poneEnCola(elem);
+    public T buscar(Predicate<T> criterio) {
+        if (criterio == null) {
+            throw new IllegalArgumentException(
+                    "Predicate cannot be null");
+        }
+        Entrada<T> encontrada =
+                monticulo.buscar(entrada -> criterio.test(entrada.dato));
+
+        return encontrada == null ? null : encontrada.dato;
     }
 
-
-    @Override
-    public void agregar(int index, T elem) {
-        throw new UnsupportedOperationException(
-                "No se puede insertar en una posición arbitraria; use poneEnCola()");
+    /**
+     * Reacomoda un elemento ya presente en la cola después de que su
+     * prioridad haya sido modificada externamente (por ejemplo, con
+     * PedidoReabastecimiento.setPrioridad()). Localiza el elemento por
+     * identidad (==), no por equals(), porque buscamos ese objeto exacto
+     * que ya está encolado, no uno "igual" según alguna noción de
+     * igualdad del dominio.
+     *
+     * Orden de uso correcto: primero mutar la prioridad del elemento,
+     * después llamar a este método. Si se llama antes, el heap va a
+     * reordenar usando el valor viejo.
+     *
+     * @throws NoSuchElementException si el elemento no está en la cola
+     */
+    public void reordenar(T elemento) {
+        checkElementNull(elemento);
+        monticulo.reordenar(entrada -> entrada.dato == elemento);
     }
 
-    @Override
-    public T remover(int index) {
-        throw new UnsupportedOperationException(
-                "No se puede remover de una posición arbitraria; use quitaDeCola()");
+    public int tamaño() {
+        return monticulo.tamaño();
     }
 
-    @Override
-    public boolean remover(T elem) {
-        throw new UnsupportedOperationException(
-                "No se puede remover un elemento arbitrario; use quitaDeCola()");
+    public boolean esVacio() {
+        return monticulo.esVacio();
+    }
+
+    public void vaciar() {
+        monticulo.vaciar();
+        contadorSecuencia = 0L;
     }
 
     private void checkElementNull(T elem) {

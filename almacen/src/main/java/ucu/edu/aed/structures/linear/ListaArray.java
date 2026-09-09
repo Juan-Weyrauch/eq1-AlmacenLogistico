@@ -141,7 +141,7 @@ public class ListaArray<T> implements TDALista<T> {
 
             while (j >= 0
                     && comparator.compare(
-                            ordenada.elementoEn(j), actual) > 0) {
+                    ordenada.elementoEn(j), actual) > 0) {
 
                 ordenada.elementos[j + 1] =
                         ordenada.elementos[j];
@@ -169,6 +169,12 @@ public class ListaArray<T> implements TDALista<T> {
     public void vaciar() {
         this.elementos = new Object[CAPACIDAD_INICIAL];
         this.size = 0;
+    }
+    public void reemplazar(int index, T elem) {
+        checkElementNull(elem);
+        checkIndexOutOfBounds(index);
+
+        this.elementos[index] = elem;
     }
 
     // =================== HELPER METHODS ====================
