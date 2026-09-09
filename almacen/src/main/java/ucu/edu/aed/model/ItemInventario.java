@@ -8,7 +8,7 @@ package ucu.edu.aed.model;
  *
  * <p>Complejidad: todas las operaciones de esta clase son O(1).</p>
  */
-public class ItemInventario {
+public class ItemInventario implements Comparable<ItemInventario>{
 
     /** Producto asociado al item de inventario. */
     private final Producto producto;
@@ -84,5 +84,12 @@ public class ItemInventario {
         if (cantidad < 0) {
             throw new IllegalArgumentException(mensaje);
         }
+    }
+
+    @Override
+    public int compareTo(ItemInventario otro) {
+        return this.producto.getCodigo().compareTo(
+                otro.producto.getCodigo()
+        );
     }
 }

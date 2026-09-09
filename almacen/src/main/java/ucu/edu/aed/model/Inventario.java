@@ -1,5 +1,6 @@
 package ucu.edu.aed.model;
 
+import ucu.edu.aed.structures.hierarchical.ArbolAVL;
 import ucu.edu.aed.structures.linear.ListaArray;
 
 /**
@@ -8,20 +9,19 @@ import ucu.edu.aed.structures.linear.ListaArray;
  * <p>Invariantes: cada producto registrado tiene un codigo no vacio, los
  * codigos no se repiten y ningun item puede tener stock negativo.</p>
  *
- * <p>Representacion: se utiliza {@link ListaArray} para cumplir con el uso de
- * estructuras lineales propias del proyecto. Las busquedas por codigo son
- * lineales.</p>
+ * Representacion: se utiliza un {@link ArbolAVL} ordenado por codigo de
+ * producto. Las busquedas, altas y modificaciones se realizan en O(log n).
  */
 public class Inventario {
 
-    /** Lista de items almacenados en el inventario. */
-    private final ListaArray<ItemInventario> items;
+    /** Árbol AVL de items almacenados en el inventario. */
+    private final ArbolAVL<ItemInventario> items;
 
     /**
      * Crea un inventario vacio.
      */
     public Inventario() {
-        this.items = new ListaArray<>();
+        this.items = new ArbolAVL<>();
     }
 
     /**
@@ -32,10 +32,8 @@ public class Inventario {
      * cambios de stock deben hacerse con {@link #aumentarStock(Producto, int)}
      * o {@link #disminuirStock(Producto, int)}.</p>
      *
-     * <p>Complejidad temporal: O(n), por la busqueda de duplicados.</p>
-     *
-     * @param producto producto a registrar
-     * @param stockInicial cantidad inicial disponible
+     * <p>Complejidad temporal: O(log n), debido a la búsqueda de duplicados
+     * en el árbol AVL y a la inserción balanceada.</p>
      */
     public void registrarProducto(Producto producto, int stockInicial) {
         String codigo = obtenerCodigoValido(producto);
@@ -46,14 +44,13 @@ public class Inventario {
                     "Ya existe un producto registrado con el codigo indicado");
         }
 
-        this.items.agregar(new ItemInventario(producto, stockInicial));
+        this.items.insertar(new ItemInventario(producto, stockInicial));
     }
 
     /**
      * Busca un item del inventario por el codigo de su producto.
      *
-     * <p>Complejidad temporal: O(n), porque recorre linealmente los items
-     * almacenados en {@link ListaArray}. </p>
+     * <p>Complejidad temporal: O(log n), debido a la búsqueda en el árbol AVL.</p>
      *
      * @param codigoProducto codigo del producto buscado
      * @return item correspondiente al producto, o {@code null} si no existe
@@ -61,14 +58,14 @@ public class Inventario {
     public ItemInventario buscarItem(String codigoProducto) {
         String codigoBuscado = validarCodigo(codigoProducto);
 
-        return this.items.buscar(item ->
-                item.getProducto().getCodigo().equals(codigoBuscado));
+        return this.items.buscar(item -> codigoBuscado.compareTo(item.getProducto().getCodigo()));
     }
 
     /**
      * Obtiene el stock disponible de un producto.
      *
-     * <p>Complejidad temporal: O(n). Si el producto no esta registrado,
+
+     * <p>Complejidad temporal: O(log n). Si el producto no está registrado,
      * retorna 0.</p>
      *
      * @param codigoProducto codigo del producto
@@ -87,7 +84,8 @@ public class Inventario {
     /**
      * Incrementa el stock de un producto.
      *
-     * <p>Complejidad temporal: O(n), por la busqueda del producto.
+     * <p>Complejidad temporal: O(log n), por la búsqueda del producto
+     * en el árbol AVL.</p>
      *
      * @param producto producto cuyo stock se incrementara
      * @param cantidad cantidad a agregar
@@ -100,7 +98,8 @@ public class Inventario {
     /**
      * Disminuye el stock de un producto.
      *
-     * <p>Complejidad temporal: O(n), por la busqueda del producto.</p>
+     * <p>Complejidad temporal: O(log n), por la búsqueda del producto
+     * en el árbol AVL.</p>
      *
      * @param producto producto cuyo stock se disminuira
      * @param cantidad cantidad a retirar
@@ -113,7 +112,7 @@ public class Inventario {
     /**
      * Determina si existe stock suficiente de un producto.
      *
-     * <p>Complejidad temporal: O(n), por la busqueda del producto.
+     * <p>Complejidad temporal: O(log n).</p>
      *
      * @param producto producto a verificar
      * @param cantidad cantidad requerida
@@ -130,19 +129,14 @@ public class Inventario {
     /**
      * Obtiene los items almacenados en el inventario.
      *
-     * <p>Complejidad temporal: O(n), porque retorna una copia de la lista para
-     * no exponer la estructura interna del inventario.</p>
+     * <p>Complejidad temporal: O(n), porque tiene que recorrer todos los nodos.</p>
      *
      * @return lista de items del inventario
      */
+
     public ListaArray<ItemInventario> getItems() {
         ListaArray<ItemInventario> copia = new ListaArray<>();
-
-        for (int i = 0; i < this.items.tamaño(); i++) {
-            ItemInventario item = this.items.obtener(i);
-            copia.agregar(new ItemInventario(item.getProducto(), item.getStock()));
-        }
-
+        this.items.inOrder(item -> copia.agregar(new ItemInventario(item.getProducto(), item.getStock())));
         return copia;
     }
 

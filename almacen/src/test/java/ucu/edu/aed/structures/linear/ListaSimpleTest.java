@@ -1,16 +1,16 @@
-package org.example;
+package ucu.edu.aed.structures.linear;
 
 import org.junit.jupiter.api.Test;
-import ucu.edu.aed.structures.linear.ListaCircular;
+import ucu.edu.aed.structures.linear.ListaSimple;
 import ucu.edu.aed.tda.linear.TDALista;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class ListaCircularTest {
+class ListaSimpleTest {
 
     @Test
     void estructuraVacia() {
-        ListaCircular<Integer> lista = new ListaCircular<>();
+        ListaSimple<Integer> lista = new ListaSimple<>();
 
         assertTrue(lista.esVacio());
         assertEquals(0, lista.tamaño());
@@ -18,22 +18,23 @@ class ListaCircularTest {
 
     @Test
     void unElemento() {
-        ListaCircular<Integer> lista = new ListaCircular<>();
+        ListaSimple<Integer> lista = new ListaSimple<>();
 
         lista.agregar(10);
 
-        assertEquals(10, lista.obtener(0));
         assertEquals(1, lista.tamaño());
+        assertEquals(10, lista.obtener(0));
     }
 
     @Test
     void multiplesElementos() {
-        ListaCircular<Integer> lista = new ListaCircular<>();
+        ListaSimple<Integer> lista = new ListaSimple<>();
 
         lista.agregar(10);
         lista.agregar(20);
         lista.agregar(30);
 
+        assertEquals(3, lista.tamaño());
         assertEquals(10, lista.obtener(0));
         assertEquals(20, lista.obtener(1));
         assertEquals(30, lista.obtener(2));
@@ -41,7 +42,7 @@ class ListaCircularTest {
 
     @Test
     void insercionInicialMediaYFinal() {
-        ListaCircular<Integer> lista = new ListaCircular<>();
+        ListaSimple<Integer> lista = new ListaSimple<>();
 
         lista.agregar(10);
         lista.agregar(30);
@@ -50,6 +51,7 @@ class ListaCircularTest {
         lista.agregar(2, 20);
         lista.agregar(4, 40);
 
+        assertEquals(5, lista.tamaño());
         assertEquals(5, lista.obtener(0));
         assertEquals(10, lista.obtener(1));
         assertEquals(20, lista.obtener(2));
@@ -59,7 +61,7 @@ class ListaCircularTest {
 
     @Test
     void eliminacionInicialMediaYFinal() {
-        ListaCircular<Integer> lista = new ListaCircular<>();
+        ListaSimple<Integer> lista = new ListaSimple<>();
 
         lista.agregar(10);
         lista.agregar(20);
@@ -77,7 +79,7 @@ class ListaCircularTest {
 
     @Test
     void busquedas() {
-        ListaCircular<Integer> lista = new ListaCircular<>();
+        ListaSimple<Integer> lista = new ListaSimple<>();
 
         lista.agregar(10);
         lista.agregar(20);
@@ -86,13 +88,15 @@ class ListaCircularTest {
         assertTrue(lista.contiene(20));
         assertEquals(1, lista.indiceDe(20));
 
+        assertFalse(lista.contiene(99));
+        assertEquals(-1, lista.indiceDe(99));
+
         assertEquals(30, lista.buscar(x -> x > 25));
-        assertNull(lista.buscar(x -> x > 100));
     }
 
     @Test
     void indicesInvalidos() {
-        ListaCircular<Integer> lista = new ListaCircular<>();
+        ListaSimple<Integer> lista = new ListaSimple<>();
 
         lista.agregar(10);
 
@@ -111,7 +115,7 @@ class ListaCircularTest {
 
     @Test
     void vaciarYReutilizacion() {
-        ListaCircular<Integer> lista = new ListaCircular<>();
+        ListaSimple<Integer> lista = new ListaSimple<>();
 
         lista.agregar(10);
         lista.agregar(20);
@@ -119,15 +123,18 @@ class ListaCircularTest {
         lista.vaciar();
 
         assertTrue(lista.esVacio());
+        assertEquals(0, lista.tamaño());
 
         lista.agregar(30);
 
+        assertFalse(lista.esVacio());
+        assertEquals(1, lista.tamaño());
         assertEquals(30, lista.obtener(0));
     }
 
     @Test
     void ordenar() {
-        ListaCircular<Integer> lista = new ListaCircular<>();
+        ListaSimple<Integer> lista = new ListaSimple<>();
 
         lista.agregar(30);
         lista.agregar(10);

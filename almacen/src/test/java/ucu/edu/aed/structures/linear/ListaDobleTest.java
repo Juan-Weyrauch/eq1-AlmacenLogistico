@@ -1,16 +1,16 @@
-package org.example;
+package ucu.edu.aed.structures.linear;
 
 import org.junit.jupiter.api.Test;
-import ucu.edu.aed.structures.linear.ListaSimple;
+import ucu.edu.aed.structures.linear.ListaDoble;
 import ucu.edu.aed.tda.linear.TDALista;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class ListaSimpleTest {
+class ListaDobleTest {
 
     @Test
     void estructuraVacia() {
-        ListaSimple<Integer> lista = new ListaSimple<>();
+        ListaDoble<Integer> lista = new ListaDoble<>();
 
         assertTrue(lista.esVacio());
         assertEquals(0, lista.tamaño());
@@ -18,23 +18,22 @@ class ListaSimpleTest {
 
     @Test
     void unElemento() {
-        ListaSimple<Integer> lista = new ListaSimple<>();
+        ListaDoble<Integer> lista = new ListaDoble<>();
 
         lista.agregar(10);
 
-        assertEquals(1, lista.tamaño());
         assertEquals(10, lista.obtener(0));
+        assertEquals(1, lista.tamaño());
     }
 
     @Test
     void multiplesElementos() {
-        ListaSimple<Integer> lista = new ListaSimple<>();
+        ListaDoble<Integer> lista = new ListaDoble<>();
 
         lista.agregar(10);
         lista.agregar(20);
         lista.agregar(30);
 
-        assertEquals(3, lista.tamaño());
         assertEquals(10, lista.obtener(0));
         assertEquals(20, lista.obtener(1));
         assertEquals(30, lista.obtener(2));
@@ -42,7 +41,7 @@ class ListaSimpleTest {
 
     @Test
     void insercionInicialMediaYFinal() {
-        ListaSimple<Integer> lista = new ListaSimple<>();
+        ListaDoble<Integer> lista = new ListaDoble<>();
 
         lista.agregar(10);
         lista.agregar(30);
@@ -61,7 +60,7 @@ class ListaSimpleTest {
 
     @Test
     void eliminacionInicialMediaYFinal() {
-        ListaSimple<Integer> lista = new ListaSimple<>();
+        ListaDoble<Integer> lista = new ListaDoble<>();
 
         lista.agregar(10);
         lista.agregar(20);
@@ -79,7 +78,7 @@ class ListaSimpleTest {
 
     @Test
     void busquedas() {
-        ListaSimple<Integer> lista = new ListaSimple<>();
+        ListaDoble<Integer> lista = new ListaDoble<>();
 
         lista.agregar(10);
         lista.agregar(20);
@@ -88,15 +87,13 @@ class ListaSimpleTest {
         assertTrue(lista.contiene(20));
         assertEquals(1, lista.indiceDe(20));
 
-        assertFalse(lista.contiene(99));
-        assertEquals(-1, lista.indiceDe(99));
-
         assertEquals(30, lista.buscar(x -> x > 25));
+        assertNull(lista.buscar(x -> x > 100));
     }
 
     @Test
     void indicesInvalidos() {
-        ListaSimple<Integer> lista = new ListaSimple<>();
+        ListaDoble<Integer> lista = new ListaDoble<>();
 
         lista.agregar(10);
 
@@ -115,7 +112,7 @@ class ListaSimpleTest {
 
     @Test
     void vaciarYReutilizacion() {
-        ListaSimple<Integer> lista = new ListaSimple<>();
+        ListaDoble<Integer> lista = new ListaDoble<>();
 
         lista.agregar(10);
         lista.agregar(20);
@@ -123,18 +120,15 @@ class ListaSimpleTest {
         lista.vaciar();
 
         assertTrue(lista.esVacio());
-        assertEquals(0, lista.tamaño());
 
         lista.agregar(30);
 
-        assertFalse(lista.esVacio());
-        assertEquals(1, lista.tamaño());
         assertEquals(30, lista.obtener(0));
     }
 
     @Test
     void ordenar() {
-        ListaSimple<Integer> lista = new ListaSimple<>();
+        ListaDoble<Integer> lista = new ListaDoble<>();
 
         lista.agregar(30);
         lista.agregar(10);
