@@ -14,14 +14,29 @@ public class Producto implements Comparable<Producto> {
     /** Descripción del producto. */
     private String descripcion;
 
+    /** Espacio (en UC) que ocupa cada unidad del producto. */
+    private int espacioUnitario;
+
     /**
-     * Crea un nuevo producto.
+     * Crea un nuevo producto con espacioUnitario por defecto (1 UC).
      *
      * @param codigo      código único del producto
      * @param nombre      nombre del producto
      * @param descripcion descripción del producto
      */
     public Producto(String codigo, String nombre, String descripcion) {
+        this(codigo, nombre, descripcion, 1);
+    }
+
+    /**
+     * Crea un nuevo producto.
+     *
+     * @param codigo          código único del producto
+     * @param nombre          nombre del producto
+     * @param descripcion     descripción del producto
+     * @param espacioUnitario espacio en UC que ocupa cada unidad
+     */
+    public Producto(String codigo, String nombre, String descripcion, int espacioUnitario) {
         if (codigo == null || codigo.isBlank()) {
             throw new IllegalArgumentException(
                     "El código del producto no puede ser nulo o vacío.");
@@ -32,9 +47,15 @@ public class Producto implements Comparable<Producto> {
                     "El nombre del producto no puede ser nulo o vacío.");
         }
 
+        if (espacioUnitario <= 0) {
+            throw new IllegalArgumentException(
+                    "El espacio unitario del producto debe ser mayor que cero.");
+        }
+
         this.codigo = codigo;
         this.nombre = nombre;
         this.descripcion = descripcion;
+        this.espacioUnitario = espacioUnitario;
     }
 
     /**
@@ -62,6 +83,15 @@ public class Producto implements Comparable<Producto> {
      */
     public String getDescripcion() {
         return this.descripcion;
+    }
+
+    /**
+     * Obtiene el espacio unitario del producto.
+     *
+     * @return espacio en UC que ocupa cada unidad
+     */
+    public int getEspacioUnitario() {
+        return this.espacioUnitario;
     }
 
     /**
