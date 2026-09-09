@@ -287,13 +287,9 @@ public class AlmacenLogistico {
     }
 
     public PedidoReabastecimiento buscarPedidoPendientePorSucursal(String sucursalId) {
-        for (int i = 0; i < pedidosPendientes.tamaño(); i++) {
-            PedidoReabastecimiento pedido = pedidosPendientes.obtener(i);
-            if (pedido.getSucursal().getId().equals(sucursalId)) {
-                return pedido;
-            }
-        }
-        return null;
+        return pedidosPendientes.buscar(
+                pedido -> pedido.getSucursal().getId().equals(sucursalId));
     }
+
 
 }

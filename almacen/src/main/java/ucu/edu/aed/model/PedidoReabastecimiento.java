@@ -17,6 +17,15 @@ public class PedidoReabastecimiento implements OperacionLogistica {
     private ListaSimple<LineaProducto> lineas;
 
     /**
+     * Prioridad del pedido. Se inicializa a partir de la cantidad de
+     * clientes de la sucursal (criterio del Hito 1), pero a partir de ahí
+     * es independiente: puede modificarse mientras el pedido está
+     * pendiente (Parte D del Hito 2), sin que un cambio posterior en la
+     * sucursal la afecte.
+     */
+    private int prioridad;
+
+    /**
      * Crea un nuevo pedido de reabastecimiento.
      *
      * @param id identificador único del pedido
@@ -36,6 +45,7 @@ public class PedidoReabastecimiento implements OperacionLogistica {
         this.id = id;
         this.sucursal = sucursal;
         this.lineas = new ListaSimple<>();
+        this.prioridad = sucursal.getCantidadClientes();
     }
 
     /**
@@ -79,15 +89,35 @@ public class PedidoReabastecimiento implements OperacionLogistica {
     }
 
     /**
-     * Obtiene la prioridad del pedido.
+     * Obtiene la prioridad actual del pedido.
      *
-     * La prioridad está determinada por la cantidad de clientes
-     * de la sucursal solicitante.
+     * Se inicializa según la cantidad de clientes de la sucursal al
+     * momento de crear el pedido, pero puede haber sido modificada
+     * después con setPrioridad() mientras el pedido estaba pendiente.
      *
      * @return prioridad del pedido
      */
     public int getPrioridad() {
-        return this.sucursal.getCantidadClientes();
+        return this.prioridad;
+    }
+
+    /**
+     * Modifica la prioridad del pedido mientras está pendiente.
+     *
+     * Quien llame a este método y el pedido ya esté encolado es
+     * responsable de avisarle a la cola de prioridad (reordenar())
+     * para que reacomode su posición; este método por sí solo no
+     * toca ninguna estructura externa.
+     *
+     * @param nuevaPrioridad nueva prioridad del pedido
+     */
+    public void setPrioridad(int nuevaPrioridad) {
+        if (nuevaPrioridad < 0) {
+            throw new IllegalArgumentException(
+                    "La prioridad no puede ser negativa.");
+        }
+
+        this.prioridad = nuevaPrioridad;
     }
 
     /**
