@@ -33,6 +33,11 @@ public class Deposito {
                     "Deposito: no existe el sector padre indicado por la ruta");
         }
 
+        validarNuevoPadre(padre, sector);
+        if (this.estructura.buscar(this.criterioPorIdentidad(sector)) != null) {
+            throw new IllegalArgumentException("El sector ya pertenece al deposito");
+        }
+
         boolean agregado =
                 this.estructura.agregarHijo(this.criterioPorIdentidad(padre), sector);
 
@@ -47,7 +52,7 @@ public class Deposito {
             return this.estructura.obtenerRaiz();
         }
 
-        String[] segmentos = ruta.split("\\" + SEPARADOR_RUTA);
+        String[] segmentos = ruta.split("\\" + SEPARADOR_RUTA, -1);
         Sector actual = this.estructura.obtenerRaiz();
 
         for (String segmento : segmentos) {
@@ -99,17 +104,20 @@ public class Deposito {
                     "Deposito: origen/destino no existen");
         }
 
-        if (!destino.estaHabilitado()) {
-            throw new IllegalArgumentException(
-                    "Deposito: el sector destino no esta habilitado");
+        validarNuevoPadre(destino, origen);
+        ListaSimple<Sector> caminoOrigen = obtenerCamino(rutaOrigen);
+        ListaSimple<Sector> caminoDestino = obtenerCamino(rutaDestino);
+        if (caminoOrigen.tamaño() == 1 || caminoDestino.contiene(origen)) {
+            throw new IllegalArgumentException("No se puede mover la raiz ni crear un ciclo");
         }
-
         int ocupacionOrigen = this.obtenerOcupacion(rutaOrigen);
-        int espacioDisponibleDestino = this.obtenerEspacioDisponible(rutaDestino);
-
-        if (ocupacionOrigen > espacioDisponibleDestino) {
-            throw new IllegalArgumentException(
-                    "Deposito: el sector destino no tiene capacidad suficiente");
+        // Los ancestros compartidos ya contabilizan la mercaderia del origen.
+        for (int i = 0; i < caminoDestino.tamaño(); i++) {
+            Sector ancestro = caminoDestino.obtener(i);
+            if (!caminoOrigen.contiene(ancestro)
+                    && ocupacionOrigen > obtenerEspacioDisponible(obtenerRuta(ancestro))) {
+                throw new IllegalArgumentException("Capacidad insuficiente en un ancestro del destino");
+            }
         }
 
         boolean movido = this.estructura.moverSubarbol(
@@ -161,7 +169,7 @@ public class Deposito {
         ListaArray<Sector> resultado = new ListaArray<>();
 
         this.estructura.preOrden(sector -> {
-            if (sector.getTipo() == TipoSector.POSICION && sector.estaHabilitado()) {
+            if (sector.getTipo() == TipoSector.POSICION && estaRutaHabilitada(sector)) {
                 resultado.agregar(sector);
             }
         });
@@ -236,6 +244,31 @@ public class Deposito {
 
     private Comparable<Sector> criterioPorCodigo(String codigo) {
         return otro -> otro.getCodigoLocal().equals(codigo) ? 0 : 1;
+    }
+
+    /** La habilitacion efectiva incluye a todos los ancestros. */
+    private boolean estaRutaHabilitada(Sector sector) {
+        ListaSimple<Sector> camino = obtenerCamino(obtenerRuta(sector));
+        for (int i = 0; i < camino.tamaño(); i++) {
+            if (!camino.obtener(i).estaHabilitado()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private void validarNuevoPadre(Sector padre, Sector sector) {
+        if (padre.getTipo() == TipoSector.POSICION || !estaRutaHabilitada(padre)) {
+            throw new IllegalArgumentException("El padre debe estar habilitado y no ser una posicion");
+        }
+        if (sector.getCodigoLocal().contains(SEPARADOR_RUTA)) {
+            throw new IllegalArgumentException("El codigo local no puede contener puntos");
+        }
+        Sector existente = estructura.buscarHijoDirecto(criterioPorIdentidad(padre),
+                criterioPorCodigo(sector.getCodigoLocal()));
+        if (existente != null && existente != sector) {
+            throw new IllegalArgumentException("Codigo local duplicado entre hermanos");
+        }
     }
 
     private Comparable<Sector> criterioPorIdentidad(Sector sector) {

@@ -18,6 +18,8 @@ class AlmacenLogisticoTest {
     @BeforeEach
     void setUp() {
         almacen = new AlmacenLogistico();
+        // Los mismos escenarios del Hito 1, ahora con capacidad fisica explicita.
+        almacen.agregarSector("", new Sector("R", "Recepcion", TipoSector.POSICION, 1000));
         terminal1 = new TerminalCarga(1);
         terminal2 = new TerminalCarga(2);
         productoPrueba = new Producto("1", "prueba", "es una prueba");
